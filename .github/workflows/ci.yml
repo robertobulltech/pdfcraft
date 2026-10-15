@@ -2,7 +2,7 @@ name: CI
 
 on:
   push:
-    branches: [main]
+    branches: [chore/2377-ci-0471a6c3]
   pull_request:
   workflow_dispatch:
   schedule:
@@ -82,6 +82,9 @@ jobs:
 
       - name: Clippy
         run: cargo clippy --workspace --all-targets -- -D warnings
+
+      - name: Text editing regressions
+        run: cargo test -p pdfcraft-edit
 
       - name: Test
         if: runner.os != 'Linux'
