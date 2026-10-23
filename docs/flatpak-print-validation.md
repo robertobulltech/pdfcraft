@@ -1,6 +1,6 @@
 # Flatpak Print Portal validation (#1905)
 
-> **Last reviewed:** 2026-10-17 · **Last updated:** 2026-10-17 · **Change:** minor (portal printing implementation and Linux validation)
+> **Last reviewed:** 2026-10-23 · **Last updated:** 2026-10-23 · **Change:** minor (refresh against main; original Linux evidence retained)
 
 ## Environment and baseline
 
@@ -85,7 +85,7 @@ handoff used the portal, without gaining access to that host directory or to CUP
 
 ## Checks
 
-Functional checks (all passed):
+Original functional checks on 2026-10-17 (all passed on that revision):
 
 | Command/scope | Result |
 |---|---:|
@@ -130,3 +130,39 @@ the repository. No third-party desktop screenshots, binary fixtures or fonts are
 | Date | Change |
 |---|---|
 | 2026-10-17 | Added implementation, baseline regression, real sandbox/PDF output and cancellation evidence. |
+
+## Refresh against main (2026-10-23, PR #3066)
+
+The branch integrates upstream `main` at `0dc77fe4` without changing the original
+portal transport. Conflict resolution retains upstream low-resolution permission
+checks, print-content filtering, hidden-layer state, localized driver options,
+optional duplex settings, paper persistence and the remembered print destination.
+The Flatpak regressions now live in the consolidated `it` integration targets;
+their child invocations use the full module-qualified test names and assert that
+one test actually passed. An explicitly selected Save as PDF remains selected
+when the Flatpak print dialog reopens.
+
+This refresh is checked on Windows. The Linux/KDE/Flatpak runtime evidence above
+belongs to the original 2026-10-17 revision and has not been rerun on this host.
+
+Fresh native checks: **155 tests passed**, using `--profile low-disk -j 2 --locked`:
+
+| Scope | Passing tests |
+|---|---:|
+| `pdfcraft-print` | 40 |
+| engine `--lib print` | 16 |
+| UI `--lib print_ui` | 8 |
+| UI `--test it print::` | 25 |
+| UI `--test it control::` | 55 |
+| automation `printing` | 3 |
+| automation `--test it automation_roots::` | 8 |
+
+`cargo fmt --all --check`, scoped Clippy on print/engine/automation/ui-egui/desktop
+with `--all-targets -- -D warnings`, and the `layers`, `assets` and `parity` xtasks
+passed. `pdfcraft-web` passed the `wasm32-unknown-unknown` check, with existing
+render/UI dead-code warnings. Linux runtime tests are excluded on Windows.
+
+The Linux-only portal and its test code also pass cross-compilation with
+`cargo check -p pdfcraft-print --target x86_64-unknown-linux-gnu --tests`
+(using the same profile/job/lock flags). This is compilation coverage, not a
+Linux runtime or physical-printer result.
