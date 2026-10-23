@@ -166,3 +166,32 @@ The Linux-only portal and its test code also pass cross-compilation with
 `cargo check -p pdfcraft-print --target x86_64-unknown-linux-gnu --tests`
 (using the same profile/job/lock flags). This is compilation coverage, not a
 Linux runtime or physical-printer result.
+
+## CI follow-up (2026-10-23)
+
+The branch now integrates upstream `main` at `57e531cc`, including its existing
+`ctutils` 0.4.5 update for RUSTSEC-2026-0385. No advisory exception was added.
+The eight new system-print UI strings have translations in all 33 catalogs,
+including the catalogs whose coverage is still partial. Translations retain the
+distinction between service acceptance and physical completion, host-owned
+printer settings, and the page/layout/scale instructions for the prepared PDF.
+The automation tool description retains both upstream's page-number subset
+clarification and the portal-specific handoff instructions after the merge.
+
+Fresh tests on Windows, Rust 1.99, `--profile low-disk -j 2 --locked`:
+
+| Scope | Passing tests |
+|---|---:|
+| UI `--lib` (including all i18n coverage and catalog validation tests) | 540 |
+| UI `--test it print::` | 25 |
+| `pdfcraft-print` | 41 |
+
+`cargo fmt --check`, UI Clippy with `-j 8 --all-targets -- -D warnings`, and
+the `layers`, `assets` and `parity` xtasks pass. `pdfcraft-web` passes the
+`wasm32-unknown-unknown` check (existing render/UI dead-code warnings).
+`cargo-deny` 0.20.2, `--all-features check`, reports advisories, bans, licenses
+and sources all OK. The failed CI runs on the preceding revision provide the
+before-fix evidence for the i18n failures and the vulnerable lockfile entry.
+
+Linux/FreeBSD runtime tests and physical printing were not rerun locally in
+this follow-up; the original KDE/Flatpak evidence remains scoped as above.

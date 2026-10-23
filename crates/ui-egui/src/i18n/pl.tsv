@@ -2611,3 +2611,13 @@ animation effects	Off	Wyłączone
 	field names can't contain a period: {name}	nazwy pól nie mogą zawierać kropki: {name}
 	two cells would both be named {name}	dwie komórki miałyby nazwę {name}
 	a field named {name} already exists	pole o nazwie {name} już istnieje
+
+# Flatpak system print portal (#1905).
+	Accepted by the system print service; physical completion is not reported	Przyjęto przez systemową usługę drukowania; zakończenie fizycznego wydruku nie jest zgłaszane
+	Cancelling system printing…	Anulowanie drukowania systemowego…
+	Finish or cancel the current system print dialog before printing again	Zakończ lub anuluj bieżące systemowe okno drukowania przed ponownym drukowaniem
+	Grayscale uses Print as image. For booklets choose short-edge duplex in the system dialog; cut and stack requires single-sided output. Physical size depends on the host driver.	Skala szarości używa opcji Drukuj jako obraz. Dla broszur wybierz w oknie systemowym druk dwustronny z odwracaniem wzdłuż krótkiej krawędzi; cięcie i układanie wymaga druku jednostronnego. Rozmiar fizyczny zależy od sterownika systemowego.
+	PDF sheet:	Arkusz PDF:
+	Preparing PDF / waiting for the system print dialog…	Przygotowywanie PDF / oczekiwanie na systemowe okno drukowania…
+	Printer, copies, collate, two-sided printing and output paper are chosen in the system dialog. Paper here sets the PDF sheet size. Keep All pages, one page per sheet and 100% scale there to preserve this preview.	Drukarkę, kopie, sortowanie, druk dwustronny i papier wyjściowy wybiera się w oknie systemowym. Papier tutaj określa rozmiar arkusza PDF. Zachowaj tam Wszystkie strony, jedną stronę na arkusz i skalę 100%, aby zachować ten podgląd.
+	System print dialog…	Systemowe okno drukowania…

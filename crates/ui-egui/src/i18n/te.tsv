@@ -2424,3 +2424,13 @@ animation effects	Off	ఆఫ్
 	field names can't contain a period: {name}	ఫీల్డ్ పేర్లలో చుక్క ఉండకూడదు: {name}
 	two cells would both be named {name}	రెండు గడులకూ {name} అనే పేరు వస్తుంది
 	a field named {name} already exists	{name} అనే ఫీల్డ్ ఇప్పటికే ఉంది
+
+# Flatpak system print portal (#1905).
+	Accepted by the system print service; physical completion is not reported	సిస్టమ్ ముద్రణ సేవ అంగీకరించింది; వాస్తవ ముద్రణ పూర్తయినట్లు నివేదించబడదు
+	Cancelling system printing…	సిస్టమ్ ముద్రణ రద్దవుతోంది…
+	Finish or cancel the current system print dialog before printing again	మళ్లీ ముద్రించే ముందు ప్రస్తుత సిస్టమ్ ముద్రణ డైలాగ్‌ను పూర్తి చేయండి లేదా రద్దు చేయండి
+	Grayscale uses Print as image. For booklets choose short-edge duplex in the system dialog; cut and stack requires single-sided output. Physical size depends on the host driver.	బూడిద రంగు స్థాయిలు చిత్రంగా ముద్రించు ఎంపికను ఉపయోగిస్తాయి. బుక్‌లెట్ల కోసం సిస్టమ్ డైలాగ్‌లో చిన్న అంచున తిప్పే రెండు వైపుల ముద్రణను ఎంచుకోండి; కత్తిరించి పేర్చడానికి ఒక వైపు ముద్రణ అవసరం. వాస్తవ పరిమాణం సిస్టమ్ డ్రైవర్‌పై ఆధారపడి ఉంటుంది.
+	PDF sheet:	PDF షీట్:
+	Preparing PDF / waiting for the system print dialog…	PDF సిద్ధమవుతోంది / సిస్టమ్ ముద్రణ డైలాగ్ కోసం వేచి ఉంది…
+	Printer, copies, collate, two-sided printing and output paper are chosen in the system dialog. Paper here sets the PDF sheet size. Keep All pages, one page per sheet and 100% scale there to preserve this preview.	ప్రింటర్, కాపీలు, కాపీల క్రమీకరణ, రెండు వైపుల ముద్రణ మరియు అవుట్‌పుట్ కాగితం సిస్టమ్ డైలాగ్‌లో ఎంచుకోబడతాయి. ఇక్కడి కాగితం PDF షీట్ పరిమాణాన్ని నిర్ణయిస్తుంది. ఈ ముందస్తు వీక్షణను అలాగే ఉంచడానికి అక్కడ అన్ని పేజీలు, షీట్‌కు ఒక పేజీ మరియు 100% స్కేల్‌ను ఉంచండి.
+	System print dialog…	సిస్టమ్ ముద్రణ డైలాగ్…

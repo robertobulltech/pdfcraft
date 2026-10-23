@@ -2774,3 +2774,13 @@ theme	Appearance	Aspecte
 	field names can't contain a period: {name}	els noms dels camps no poden contenir cap punt: {name}
 	two cells would both be named {name}	dues cel·les es dirien {name}
 	a field named {name} already exists	ja existeix un camp anomenat {name}
+
+# Flatpak system print portal (#1905).
+	Accepted by the system print service; physical completion is not reported	Acceptat pel servei d’impressió del sistema; no s’informa de la finalització física
+	Cancelling system printing…	S’està cancel·lant la impressió del sistema…
+	Finish or cancel the current system print dialog before printing again	Acabeu o cancel·leu el diàleg d’impressió del sistema actual abans de tornar a imprimir
+	Grayscale uses Print as image. For booklets choose short-edge duplex in the system dialog; cut and stack requires single-sided output. Physical size depends on the host driver.	L’escala de grisos utilitza Imprimeix com a imatge. Per als fullets, trieu doble cara pel costat curt al diàleg del sistema; tallar i apilar requereix impressió a una cara. La mida física depèn del controlador del sistema.
+	PDF sheet:	Full PDF:
+	Preparing PDF / waiting for the system print dialog…	S’està preparant el PDF / esperant el diàleg d’impressió del sistema…
+	Printer, copies, collate, two-sided printing and output paper are chosen in the system dialog. Paper here sets the PDF sheet size. Keep All pages, one page per sheet and 100% scale there to preserve this preview.	La impressora, les còpies, la intercalació, la impressió a doble cara i el paper de sortida es trien al diàleg del sistema. El paper aquí defineix la mida del full PDF. Manteniu-hi Totes les pàgines, una pàgina per full i una escala del 100 % per conservar aquesta previsualització.
+	System print dialog…	Diàleg d’impressió del sistema…

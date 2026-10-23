@@ -2479,3 +2479,13 @@ animation effects	Off	关
 	field names can't contain a period: {name}	字段名称不能包含句点：{name}
 	two cells would both be named {name}	两个单元格的名称都会是 {name}
 	a field named {name} already exists	已存在名为 {name} 的字段
+
+# Flatpak system print portal (#1905).
+	Accepted by the system print service; physical completion is not reported	系统打印服务已接受请求；不报告实际打印是否完成
+	Cancelling system printing…	正在取消系统打印…
+	Finish or cancel the current system print dialog before printing again	再次打印前，请完成或取消当前的系统打印对话框
+	Grayscale uses Print as image. For booklets choose short-edge duplex in the system dialog; cut and stack requires single-sided output. Physical size depends on the host driver.	灰度使用“作为图像打印”。打印小册子时，请在系统对话框中选择短边双面打印；裁切堆叠需要单面输出。实际尺寸取决于系统驱动程序。
+	PDF sheet:	PDF纸张：
+	Preparing PDF / waiting for the system print dialog…	正在准备PDF / 等待系统打印对话框…
+	Printer, copies, collate, two-sided printing and output paper are chosen in the system dialog. Paper here sets the PDF sheet size. Keep All pages, one page per sheet and 100% scale there to preserve this preview.	打印机、份数、逐份打印、双面打印和输出纸张在系统对话框中选择。此处的纸张设置决定PDF纸张尺寸。请在系统对话框中保留所有页面、每张纸一页和100%缩放，以保持此预览效果。
+	System print dialog…	系统打印对话框…

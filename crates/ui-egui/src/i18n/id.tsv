@@ -2751,3 +2751,13 @@ theme	Appearance	Tampilan
 	field names can't contain a period: {name}	nama kolom tidak boleh berisi titik: {name}
 	two cells would both be named {name}	dua sel akan sama-sama bernama {name}
 	a field named {name} already exists	kolom bernama {name} sudah ada
+
+# Flatpak system print portal (#1905).
+	Accepted by the system print service; physical completion is not reported	Diterima oleh layanan cetak sistem; penyelesaian fisik tidak dilaporkan
+	Cancelling system printing…	Membatalkan pencetakan sistem…
+	Finish or cancel the current system print dialog before printing again	Selesaikan atau batalkan dialog cetak sistem saat ini sebelum mencetak lagi
+	Grayscale uses Print as image. For booklets choose short-edge duplex in the system dialog; cut and stack requires single-sided output. Physical size depends on the host driver.	Skala abu-abu menggunakan Cetak sebagai gambar. Untuk buklet, pilih cetak dua sisi tepi pendek pada dialog sistem; potong dan tumpuk memerlukan keluaran satu sisi. Ukuran fisik bergantung pada pengandar sistem.
+	PDF sheet:	Lembar PDF:
+	Preparing PDF / waiting for the system print dialog…	Menyiapkan PDF / menunggu dialog cetak sistem…
+	Printer, copies, collate, two-sided printing and output paper are chosen in the system dialog. Paper here sets the PDF sheet size. Keep All pages, one page per sheet and 100% scale there to preserve this preview.	Printer, salinan, penyusunan salinan, pencetakan dua sisi, dan kertas keluaran dipilih pada dialog sistem. Kertas di sini menentukan ukuran lembar PDF. Pertahankan Semua halaman, satu halaman per lembar, dan skala 100% di sana untuk mempertahankan pratinjau ini.
+	System print dialog…	Dialog cetak sistem…

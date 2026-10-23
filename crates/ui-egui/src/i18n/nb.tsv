@@ -2694,3 +2694,13 @@ key	Space	Mellomrom
 # Page gaps (AI-assisted, not separately native-reviewed)
 	Show gaps between pages	Vis mellomrom mellom sidene
 	Hide gaps to join page edges. Margins inside the PDF remain unchanged.	Skjul mellomrommene slik at sidekantene møtes. Margene inne i PDF-en endres ikke.
+
+# Flatpak system print portal (#1905).
+	Accepted by the system print service; physical completion is not reported	Godtatt av systemets utskriftstjeneste; fysisk fullføring rapporteres ikke
+	Cancelling system printing…	Avbryter systemutskrift…
+	Finish or cancel the current system print dialog before printing again	Fullfør eller avbryt den gjeldende systemdialogen for utskrift før du skriver ut igjen
+	Grayscale uses Print as image. For booklets choose short-edge duplex in the system dialog; cut and stack requires single-sided output. Physical size depends on the host driver.	Gråtoner bruker Skriv ut som bilde. Velg tosidig utskrift langs kortsiden i systemdialogen for hefter; klipp og stable krever ensidig utskrift. Fysisk størrelse avhenger av systemets driver.
+	PDF sheet:	PDF-ark:
+	Preparing PDF / waiting for the system print dialog…	Klargjør PDF / venter på systemdialogen for utskrift…
+	Printer, copies, collate, two-sided printing and output paper are chosen in the system dialog. Paper here sets the PDF sheet size. Keep All pages, one page per sheet and 100% scale there to preserve this preview.	Skriver, kopier, sortering, tosidig utskrift og utskriftspapir velges i systemdialogen. Papiret her angir PDF-arkets størrelse. Behold Alle sider, én side per ark og 100 % skalering der for å bevare denne forhåndsvisningen.
+	System print dialog…	Systemdialog for utskrift…

@@ -2429,3 +2429,13 @@ animation effects	Off	ປິດ
 	Make properties default	ກຳນົດຄຸນສົມບັດເປັນຄ່າເລີ່ມຕົ້ນ
 	Pages selected	ໜ້າທີ່ເລືອກ
 	Page properties	ຄຸນສົມບັດໜ້າ
+
+# Flatpak system print portal (#1905).
+	Accepted by the system print service; physical completion is not reported	ບໍລິການພິມຂອງລະບົບຍອມຮັບແລ້ວ; ບໍ່ລາຍງານການພິມຈິງສຳເລັດ
+	Cancelling system printing…	ກຳລັງຍົກເລີກການພິມຂອງລະບົບ…
+	Finish or cancel the current system print dialog before printing again	ດຳເນີນການ ຫຼື ຍົກເລີກກ່ອງໂຕ້ຕອບການພິມຂອງລະບົບປັດຈຸບັນກ່ອນພິມອີກຄັ້ງ
+	Grayscale uses Print as image. For booklets choose short-edge duplex in the system dialog; cut and stack requires single-sided output. Physical size depends on the host driver.	ລະດັບສີເທົາໃຊ້ການພິມເປັນຮູບ. ສຳລັບປຶ້ມນ້ອຍ ໃຫ້ເລືອກພິມສອງໜ້າພິກຂອບສັ້ນໃນກ່ອງໂຕ້ຕອບຂອງລະບົບ; ການຕັດແລະຊ້ອນຕ້ອງພິມໜ້າດຽວ. ຂະໜາດຈິງຂຶ້ນກັບໄດຣເວີຂອງລະບົບ.
+	PDF sheet:	ແຜ່ນ PDF:
+	Preparing PDF / waiting for the system print dialog…	ກຳລັງກຽມ PDF / ລໍຖ້າກ່ອງໂຕ້ຕອບການພິມຂອງລະບົບ…
+	Printer, copies, collate, two-sided printing and output paper are chosen in the system dialog. Paper here sets the PDF sheet size. Keep All pages, one page per sheet and 100% scale there to preserve this preview.	ເລືອກເຄື່ອງພິມ, ສຳເນົາ, ການຈັດຊຸດ, ການພິມສອງໜ້າ ແລະ ເຈ້ຍຂາອອກໃນກ່ອງໂຕ້ຕອບຂອງລະບົບ. ເຈ້ຍທີ່ນີ້ກຳນົດຂະໜາດແຜ່ນ PDF. ໃຫ້ຄົງຄ່າທຸກໜ້າ, ໜຶ່ງໜ້າຕໍ່ແຜ່ນ ແລະ ມາດຕາສ່ວນ 100% ໄວ້ທີ່ນັ້ນເພື່ອຮັກສາພາບຕົວຢ່າງນີ້.
+	System print dialog…	ກ່ອງໂຕ້ຕອບການພິມຂອງລະບົບ…

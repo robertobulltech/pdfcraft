@@ -2428,3 +2428,13 @@ animation effects	Off	Выкл
 	field names can't contain a period: {name}	имена полей не могут содержать точку: {name}
 	two cells would both be named {name}	две ячейки получили бы одно имя {name}
 	a field named {name} already exists	поле с именем {name} уже существует
+
+# Flatpak system print portal (#1905).
+	Accepted by the system print service; physical completion is not reported	Принято системной службой печати; о физическом завершении не сообщается
+	Cancelling system printing…	Отмена системной печати…
+	Finish or cancel the current system print dialog before printing again	Завершите или отмените текущий системный диалог печати перед повторной печатью
+	Grayscale uses Print as image. For booklets choose short-edge duplex in the system dialog; cut and stack requires single-sided output. Physical size depends on the host driver.	Оттенки серого используют Печать как изображение. Для буклетов выберите в системном диалоге двустороннюю печать по короткому краю; резка и укладка требуют односторонней печати. Физический размер зависит от системного драйвера.
+	PDF sheet:	Лист PDF:
+	Preparing PDF / waiting for the system print dialog…	Подготовка PDF / ожидание системного диалога печати…
+	Printer, copies, collate, two-sided printing and output paper are chosen in the system dialog. Paper here sets the PDF sheet size. Keep All pages, one page per sheet and 100% scale there to preserve this preview.	Принтер, копии, подбор по копиям, двусторонняя печать и выходная бумага выбираются в системном диалоге. Бумага здесь задаёт размер листа PDF. Сохраните там Все страницы, одну страницу на лист и масштаб 100%, чтобы сохранить этот предпросмотр.
+	System print dialog…	Системный диалог печати…

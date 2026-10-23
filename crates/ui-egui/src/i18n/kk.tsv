@@ -2513,3 +2513,13 @@ animation effects	Off	Өшірулі
 	field names can't contain a period: {name}	өріс атауларында нүкте болмауы керек: {name}
 	two cells would both be named {name}	екі ұяшықтың да атауы {name} болар еді
 	a field named {name} already exists	{name} атты өріс бар
+
+# Flatpak system print portal (#1905).
+	Accepted by the system print service; physical completion is not reported	Жүйелік басып шығару қызметі қабылдады; нақты басып шығарудың аяқталуы хабарланбайды
+	Cancelling system printing…	Жүйелік басып шығарудан бас тартылуда…
+	Finish or cancel the current system print dialog before printing again	Қайта басып шығармас бұрын ағымдағы жүйелік басып шығару диалогын аяқтаңыз немесе одан бас тартыңыз
+	Grayscale uses Print as image. For booklets choose short-edge duplex in the system dialog; cut and stack requires single-sided output. Physical size depends on the host driver.	Сұр реңктер Сурет ретінде басып шығару мүмкіндігін пайдаланады. Кітапшалар үшін жүйелік диалогта қысқа жиек бойынша екіжақты басып шығаруды таңдаңыз; кесу және жинау үшін біржақты шығару қажет. Нақты өлшем жүйелік драйверге байланысты.
+	PDF sheet:	PDF парағы:
+	Preparing PDF / waiting for the system print dialog…	PDF дайындалуда / жүйелік басып шығару диалогы күтілуде…
+	Printer, copies, collate, two-sided printing and output paper are chosen in the system dialog. Paper here sets the PDF sheet size. Keep All pages, one page per sheet and 100% scale there to preserve this preview.	Принтер, көшірмелер, көшірмелерді жинақтау, екіжақты басып шығару және шығыс қағазы жүйелік диалогта таңдалады. Мұндағы қағаз PDF парағының өлшемін орнатады. Осы алдын ала қарауды сақтау үшін онда Барлық беттер, әр параққа бір бет және 100% масштаб параметрлерін сақтаңыз.
+	System print dialog…	Жүйелік басып шығару диалогы…

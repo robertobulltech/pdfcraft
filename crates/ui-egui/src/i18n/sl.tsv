@@ -2520,3 +2520,13 @@ animation effects	Off	Izklopljeni
 	field names can't contain a period: {name}	imena polj ne smejo vsebovati pike: {name}
 	two cells would both be named {name}	dve celici bi imeli enako ime {name}
 	a field named {name} already exists	polje z imenom {name} že obstaja
+
+# Flatpak system print portal (#1905).
+	Accepted by the system print service; physical completion is not reported	Sistemska storitev tiskanja je sprejela opravilo; fizični zaključek ni sporočen
+	Cancelling system printing…	Preklic sistemskega tiskanja…
+	Finish or cancel the current system print dialog before printing again	Pred ponovnim tiskanjem dokončajte ali prekličite trenutno sistemsko pogovorno okno za tiskanje
+	Grayscale uses Print as image. For booklets choose short-edge duplex in the system dialog; cut and stack requires single-sided output. Physical size depends on the host driver.	Sivine uporabljajo Natisni kot sliko. Za knjižice v sistemskem pogovornem oknu izberite obojestransko tiskanje po kratkem robu; rezanje in zlaganje zahteva enostranski izpis. Fizična velikost je odvisna od sistemskega gonilnika.
+	PDF sheet:	List PDF:
+	Preparing PDF / waiting for the system print dialog…	Priprava PDF / čakanje na sistemsko pogovorno okno za tiskanje…
+	Printer, copies, collate, two-sided printing and output paper are chosen in the system dialog. Paper here sets the PDF sheet size. Keep All pages, one page per sheet and 100% scale there to preserve this preview.	Tiskalnik, kopije, zbiranje, obojestransko tiskanje in izhodni papir izberete v sistemskem pogovornem oknu. Papir tukaj določa velikost lista PDF. Tam ohranite Vse strani, eno stran na list in merilo 100 %, da ohranite ta predogled.
+	System print dialog…	Sistemsko pogovorno okno za tiskanje…

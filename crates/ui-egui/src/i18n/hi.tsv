@@ -2750,3 +2750,13 @@ theme	Appearance	स्वरूप
 	field names can't contain a period: {name}	फ़ील्ड के नामों में पूर्ण विराम (.) नहीं हो सकता: {name}
 	two cells would both be named {name}	दो सेल का नाम {name} हो जाएगा
 	a field named {name} already exists	{name} नाम का फ़ील्ड पहले से मौजूद है
+
+# Flatpak system print portal (#1905).
+	Accepted by the system print service; physical completion is not reported	सिस्टम की मुद्रण सेवा ने स्वीकार कर लिया है; वास्तविक मुद्रण पूरा होने की सूचना नहीं दी जाती
+	Cancelling system printing…	सिस्टम मुद्रण रद्द किया जा रहा है…
+	Finish or cancel the current system print dialog before printing again	दोबारा मुद्रण से पहले मौजूदा सिस्टम मुद्रण संवाद पूरा करें या रद्द करें
+	Grayscale uses Print as image. For booklets choose short-edge duplex in the system dialog; cut and stack requires single-sided output. Physical size depends on the host driver.	ग्रेस्केल के लिए चित्र के रूप में प्रिंट करें का उपयोग होता है। पुस्तिकाओं के लिए सिस्टम संवाद में छोटे किनारे से दोतरफ़ा मुद्रण चुनें; काटकर ढेर लगाने के लिए एकतरफ़ा मुद्रण आवश्यक है। वास्तविक आकार सिस्टम के ड्राइवर पर निर्भर करता है।
+	PDF sheet:	PDF शीट:
+	Preparing PDF / waiting for the system print dialog…	PDF तैयार हो रहा है / सिस्टम मुद्रण संवाद की प्रतीक्षा है…
+	Printer, copies, collate, two-sided printing and output paper are chosen in the system dialog. Paper here sets the PDF sheet size. Keep All pages, one page per sheet and 100% scale there to preserve this preview.	प्रिंटर, प्रतियाँ, क्रमवार प्रतियाँ, दोतरफ़ा मुद्रण और आउटपुट कागज़ सिस्टम संवाद में चुने जाते हैं। यहाँ का कागज़ PDF शीट का आकार तय करता है। इस पूर्वावलोकन को बनाए रखने के लिए वहाँ सभी पृष्ठ, प्रति शीट एक पृष्ठ और 100% पैमाना रखें।
+	System print dialog…	सिस्टम मुद्रण संवाद…

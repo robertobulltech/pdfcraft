@@ -2747,3 +2747,13 @@ certificate	SHA-256 digest	Impronta SHA-256
 	field names can't contain a period: {name}	i nomi dei campi non possono contenere un punto: {name}
 	two cells would both be named {name}	due celle si chiamerebbero entrambe {name}
 	a field named {name} already exists	esiste già un campo chiamato {name}
+
+# Flatpak system print portal (#1905).
+	Accepted by the system print service; physical completion is not reported	Accettato dal servizio di stampa del sistema; il completamento fisico non viene segnalato
+	Cancelling system printing…	Annullamento della stampa di sistema…
+	Finish or cancel the current system print dialog before printing again	Completa o annulla la finestra di stampa di sistema corrente prima di stampare di nuovo
+	Grayscale uses Print as image. For booklets choose short-edge duplex in the system dialog; cut and stack requires single-sided output. Physical size depends on the host driver.	La scala di grigi usa Stampa come immagine. Per gli opuscoli scegli il fronte-retro sul lato corto nella finestra di sistema; taglia e impila richiede la stampa su un solo lato. Le dimensioni fisiche dipendono dal driver del sistema.
+	PDF sheet:	Foglio PDF:
+	Preparing PDF / waiting for the system print dialog…	Preparazione del PDF / attesa della finestra di stampa di sistema…
+	Printer, copies, collate, two-sided printing and output paper are chosen in the system dialog. Paper here sets the PDF sheet size. Keep All pages, one page per sheet and 100% scale there to preserve this preview.	Stampante, copie, fascicolazione, fronte-retro e carta di uscita si scelgono nella finestra di sistema. La carta qui imposta le dimensioni del foglio PDF. Mantieni Tutte le pagine, una pagina per foglio e scala al 100% nella finestra di sistema per conservare questa anteprima.
+	System print dialog…	Finestra di stampa di sistema…

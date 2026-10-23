@@ -2521,3 +2521,13 @@ animation effects	Off	Ανενεργά
 	field names can't contain a period: {name}	τα ονόματα πεδίων δεν μπορούν να περιέχουν τελεία: {name}
 	two cells would both be named {name}	δύο κελιά θα είχαν το ίδιο όνομα {name}
 	a field named {name} already exists	υπάρχει ήδη πεδίο με όνομα {name}
+
+# Flatpak system print portal (#1905).
+	Accepted by the system print service; physical completion is not reported	Έγινε αποδοχή από την υπηρεσία εκτύπωσης του συστήματος· δεν αναφέρεται η φυσική ολοκλήρωση
+	Cancelling system printing…	Ακύρωση εκτύπωσης συστήματος…
+	Finish or cancel the current system print dialog before printing again	Ολοκληρώστε ή ακυρώστε τον τρέχοντα διάλογο εκτύπωσης του συστήματος πριν εκτυπώσετε ξανά
+	Grayscale uses Print as image. For booklets choose short-edge duplex in the system dialog; cut and stack requires single-sided output. Physical size depends on the host driver.	Η κλίμακα του γκρι χρησιμοποιεί την Εκτύπωση ως εικόνα. Για φυλλάδια επιλέξτε εκτύπωση διπλής όψης στη μικρή πλευρά στον διάλογο του συστήματος· η κοπή και στοίβαξη απαιτεί εκτύπωση μονής όψης. Το φυσικό μέγεθος εξαρτάται από το πρόγραμμα οδήγησης του συστήματος.
+	PDF sheet:	Φύλλο PDF:
+	Preparing PDF / waiting for the system print dialog…	Προετοιμασία PDF / αναμονή για τον διάλογο εκτύπωσης του συστήματος…
+	Printer, copies, collate, two-sided printing and output paper are chosen in the system dialog. Paper here sets the PDF sheet size. Keep All pages, one page per sheet and 100% scale there to preserve this preview.	Ο εκτυπωτής, τα αντίγραφα, η συρραφή αντιγράφων, η εκτύπωση διπλής όψης και το χαρτί εξόδου επιλέγονται στον διάλογο του συστήματος. Το χαρτί εδώ ορίζει το μέγεθος του φύλλου PDF. Διατηρήστε εκεί Όλες οι σελίδες, μία σελίδα ανά φύλλο και κλίμακα 100% για να διατηρηθεί αυτή η προεπισκόπηση.
+	System print dialog…	Διάλογος εκτύπωσης συστήματος…

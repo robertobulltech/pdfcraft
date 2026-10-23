@@ -2838,3 +2838,13 @@ theme	Appearance	Aspecto
 	field names can't contain a period: {name}	los nombres de campo no pueden contener un punto: {name}
 	two cells would both be named {name}	dos celdas se llamarían {name}
 	a field named {name} already exists	ya existe un campo llamado {name}
+
+# Flatpak system print portal (#1905).
+	Accepted by the system print service; physical completion is not reported	Aceptado por el servicio de impresión del sistema; no se informa de la finalización física
+	Cancelling system printing…	Cancelando la impresión del sistema…
+	Finish or cancel the current system print dialog before printing again	Finaliza o cancela el diálogo de impresión del sistema actual antes de volver a imprimir
+	Grayscale uses Print as image. For booklets choose short-edge duplex in the system dialog; cut and stack requires single-sided output. Physical size depends on the host driver.	La escala de grises usa Imprimir como imagen. Para los folletos, elige doble cara por el borde corto en el diálogo del sistema; cortar y apilar requiere impresión a una cara. El tamaño físico depende del controlador del sistema.
+	PDF sheet:	Hoja PDF:
+	Preparing PDF / waiting for the system print dialog…	Preparando PDF / esperando el diálogo de impresión del sistema…
+	Printer, copies, collate, two-sided printing and output paper are chosen in the system dialog. Paper here sets the PDF sheet size. Keep All pages, one page per sheet and 100% scale there to preserve this preview.	La impresora, las copias, la intercalación, la impresión a doble cara y el papel de salida se eligen en el diálogo del sistema. El papel aquí define el tamaño de la hoja PDF. Mantén Todas las páginas, una página por hoja y una escala del 100 % allí para conservar esta vista previa.
+	System print dialog…	Diálogo de impresión del sistema…

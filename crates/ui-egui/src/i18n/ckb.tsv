@@ -2713,3 +2713,13 @@ certificate	Version	وەشان
 	Make properties default	کردنی تایبەتمەندییەکان بە بنەڕەتی
 	Pages selected	پەڕە هەڵبژێردراوەکان
 	Page properties	تایبەتمەندییەکانی پەڕە
+
+# Flatpak system print portal (#1905).
+	Accepted by the system print service; physical completion is not reported	خزمەتگوزاری چاپی سیستەم قبووڵی کرد؛ تەواوبوونی چاپی فیزیکی ڕاناگەیەنرێت
+	Cancelling system printing…	چاپی سیستەم هەڵدەوەشێنرێتەوە…
+	Finish or cancel the current system print dialog before printing again	پێش چاپکردنەوە، دیالۆگی چاپی ئێستای سیستەم تەواو بکە یان هەڵیبەشێنەوە
+	Grayscale uses Print as image. For booklets choose short-edge duplex in the system dialog; cut and stack requires single-sided output. Physical size depends on the host driver.	پلەکانی خۆڵەمێشی چاپکردن وەک وێنە بەکاردەهێنێت. بۆ نامیلکە، لە دیالۆگی سیستەم چاپی دوولایەنە بە پەڕاندنەوە لە لێواری کورت هەڵبژێرە؛ بڕین و کۆکردنەوە چاپی تاکلایەنەی پێویستە. قەبارەی فیزیکی بە درایڤەری سیستەمەوە بەستراوە.
+	PDF sheet:	پەڕەی PDF:
+	Preparing PDF / waiting for the system print dialog…	ئامادەکردنی PDF / چاوەڕوانی دیالۆگی چاپی سیستەم…
+	Printer, copies, collate, two-sided printing and output paper are chosen in the system dialog. Paper here sets the PDF sheet size. Keep All pages, one page per sheet and 100% scale there to preserve this preview.	چاپکەر، کۆپییەکان، ڕیزکردنی کۆپییەکان، چاپی دوولایەنە و کاغەزی دەرچوو لە دیالۆگی سیستەم هەڵدەبژێردرێن. کاغەزی ئێرە قەبارەی پەڕەی PDF دیاری دەکات. بۆ پاراستنی ئەم پێشبینینە، لەوێ هەموو پەڕەکان، یەک پەڕە لە هەر کاغەزێک و پێوەری 100% بهێڵەوە.
+	System print dialog…	دیالۆگی چاپی سیستەم…

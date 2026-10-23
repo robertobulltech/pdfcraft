@@ -2822,3 +2822,13 @@ certificate	Version	Verze
 	field names can't contain a period: {name}	názvy polí nesmějí obsahovat tečku: {name}
 	two cells would both be named {name}	dvě buňky by se jmenovaly {name}
 	a field named {name} already exists	pole s názvem {name} už existuje
+
+# Flatpak system print portal (#1905).
+	Accepted by the system print service; physical completion is not reported	Přijato systémovou tiskovou službou; dokončení fyzického tisku se nehlásí
+	Cancelling system printing…	Rušení systémového tisku…
+	Finish or cancel the current system print dialog before printing again	Před dalším tiskem dokončete nebo zrušte aktuální systémový tiskový dialog
+	Grayscale uses Print as image. For booklets choose short-edge duplex in the system dialog; cut and stack requires single-sided output. Physical size depends on the host driver.	Odstíny šedi používají Tisknout jako obrázek. Pro brožury zvolte v systémovém dialogu oboustranný tisk přes kratší okraj; řezání a skládání vyžaduje jednostranný tisk. Fyzická velikost závisí na systémovém ovladači.
+	PDF sheet:	List PDF:
+	Preparing PDF / waiting for the system print dialog…	Příprava PDF / čekání na systémový tiskový dialog…
+	Printer, copies, collate, two-sided printing and output paper are chosen in the system dialog. Paper here sets the PDF sheet size. Keep All pages, one page per sheet and 100% scale there to preserve this preview.	Tiskárna, kopie, kompletování, oboustranný tisk a výstupní papír se vybírají v systémovém dialogu. Papír zde určuje velikost listu PDF. Pro zachování tohoto náhledu tam ponechte Všechny stránky, jednu stránku na list a měřítko 100 %.
+	System print dialog…	Systémový tiskový dialog…

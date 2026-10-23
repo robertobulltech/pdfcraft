@@ -2780,3 +2780,13 @@ key	Space	Space
 	a table has 1 to {max} columns	một bảng có từ 1 đến {max} cột
 	the first row number can be at most {max}	số hàng đầu tiên tối đa là {max}
 	the area, the spacing and the column widths must be numbers, the spacing 0 or more and each width more than 0	vùng, khoảng cách và độ rộng cột phải là số, khoảng cách từ 0 trở lên và mỗi độ rộng lớn hơn 0
+
+# Flatpak system print portal (#1905).
+	Accepted by the system print service; physical completion is not reported	Dịch vụ in của hệ thống đã chấp nhận; không báo cáo việc hoàn tất in thực tế
+	Cancelling system printing…	Đang hủy in qua hệ thống…
+	Finish or cancel the current system print dialog before printing again	Hoàn tất hoặc hủy hộp thoại in hệ thống hiện tại trước khi in lại
+	Grayscale uses Print as image. For booklets choose short-edge duplex in the system dialog; cut and stack requires single-sided output. Physical size depends on the host driver.	Thang độ xám dùng In dưới dạng ảnh. Với tập sách, chọn in hai mặt lật cạnh ngắn trong hộp thoại hệ thống; cắt và xếp chồng yêu cầu in một mặt. Kích thước thực tế phụ thuộc vào trình điều khiển hệ thống.
+	PDF sheet:	Tờ PDF:
+	Preparing PDF / waiting for the system print dialog…	Đang chuẩn bị PDF / chờ hộp thoại in của hệ thống…
+	Printer, copies, collate, two-sided printing and output paper are chosen in the system dialog. Paper here sets the PDF sheet size. Keep All pages, one page per sheet and 100% scale there to preserve this preview.	Máy in, số bản sao, sắp bộ, in hai mặt và giấy đầu ra được chọn trong hộp thoại hệ thống. Giấy ở đây đặt kích thước tờ PDF. Giữ Tất cả các trang, một trang trên mỗi tờ và tỷ lệ 100% ở đó để giữ nguyên bản xem trước này.
+	System print dialog…	Hộp thoại in của hệ thống…

@@ -2511,3 +2511,13 @@ animation effects	Off	Kapalı
 	field names can't contain a period: {name}	alan adları nokta içeremez: {name}
 	two cells would both be named {name}	iki hücrenin de adı {name} olurdu
 	a field named {name} already exists	{name} adlı bir alan zaten var
+
+# Flatpak system print portal (#1905).
+	Accepted by the system print service; physical completion is not reported	Sistemin yazdırma hizmeti tarafından kabul edildi; fiziksel tamamlanma bildirilmez
+	Cancelling system printing…	Sistem yazdırması iptal ediliyor…
+	Finish or cancel the current system print dialog before printing again	Yeniden yazdırmadan önce mevcut sistem yazdırma iletişim kutusunu tamamlayın veya iptal edin
+	Grayscale uses Print as image. For booklets choose short-edge duplex in the system dialog; cut and stack requires single-sided output. Physical size depends on the host driver.	Gri tonlama, Görüntü olarak yazdır seçeneğini kullanır. Kitapçıklar için sistem iletişim kutusunda kısa kenardan çift taraflı yazdırmayı seçin; kes ve istifle tek taraflı çıktı gerektirir. Fiziksel boyut sistem sürücüsüne bağlıdır.
+	PDF sheet:	PDF yaprağı:
+	Preparing PDF / waiting for the system print dialog…	PDF hazırlanıyor / sistem yazdırma iletişim kutusu bekleniyor…
+	Printer, copies, collate, two-sided printing and output paper are chosen in the system dialog. Paper here sets the PDF sheet size. Keep All pages, one page per sheet and 100% scale there to preserve this preview.	Yazıcı, kopyalar, harmanlama, çift taraflı yazdırma ve çıktı kağıdı sistem iletişim kutusunda seçilir. Buradaki kağıt PDF yaprağının boyutunu belirler. Bu önizlemeyi korumak için orada Tüm sayfalar, yaprak başına bir sayfa ve %100 ölçek ayarlarını koruyun.
+	System print dialog…	Sistem yazdırma iletişim kutusu…

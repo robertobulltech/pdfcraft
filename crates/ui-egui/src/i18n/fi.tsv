@@ -2783,3 +2783,13 @@ theme	Appearance	Teema
 	field names can't contain a period: {name}	kenttien nimissä ei voi olla pistettä: {name}
 	two cells would both be named {name}	kahdella solulla olisi sama nimi {name}
 	a field named {name} already exists	kenttä nimeltä {name} on jo olemassa
+
+# Flatpak system print portal (#1905).
+	Accepted by the system print service; physical completion is not reported	Järjestelmän tulostuspalvelu hyväksyi työn; fyysisestä valmistumisesta ei ilmoiteta
+	Cancelling system printing…	Perutaan järjestelmätulostusta…
+	Finish or cancel the current system print dialog before printing again	Viimeistele tai peru nykyinen järjestelmän tulostusikkuna ennen uutta tulostusta
+	Grayscale uses Print as image. For booklets choose short-edge duplex in the system dialog; cut and stack requires single-sided output. Physical size depends on the host driver.	Harmaasävy käyttää Tulosta kuvana -toimintoa. Valitse vihkoille järjestelmäikkunassa kaksipuolinen tulostus lyhyen reunan ympäri; leikkaaminen ja pinoaminen vaatii yksipuolisen tulostuksen. Fyysinen koko riippuu järjestelmän ajurista.
+	PDF sheet:	PDF-arkki:
+	Preparing PDF / waiting for the system print dialog…	Valmistellaan PDF:ää / odotetaan järjestelmän tulostusikkunaa…
+	Printer, copies, collate, two-sided printing and output paper are chosen in the system dialog. Paper here sets the PDF sheet size. Keep All pages, one page per sheet and 100% scale there to preserve this preview.	Tulostin, kopiot, lajittelu, kaksipuolinen tulostus ja tulostuspaperi valitaan järjestelmäikkunassa. Tässä valittu paperi määrää PDF-arkin koon. Säilytä siellä Kaikki sivut, yksi sivu arkille ja 100 %:n mittakaava, jotta tämä esikatselu säilyy.
+	System print dialog…	Järjestelmän tulostusikkuna…

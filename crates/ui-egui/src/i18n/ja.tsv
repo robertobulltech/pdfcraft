@@ -2515,3 +2515,13 @@ animation effects	Off	オフ
 	field names can't contain a period: {name}	フィールド名にピリオドは使えません: {name}
 	two cells would both be named {name}	2 つのセルが同じ名前 {name} になります
 	a field named {name} already exists	{name} という名前のフィールドは既にあります
+
+# Flatpak system print portal (#1905).
+	Accepted by the system print service; physical completion is not reported	システムの印刷サービスが受け付けました。物理的な印刷完了は通知されません
+	Cancelling system printing…	システム印刷をキャンセル中…
+	Finish or cancel the current system print dialog before printing again	再度印刷する前に、現在のシステム印刷ダイアログを完了するかキャンセルしてください
+	Grayscale uses Print as image. For booklets choose short-edge duplex in the system dialog; cut and stack requires single-sided output. Physical size depends on the host driver.	グレースケールでは「画像として印刷」を使用します。小冊子ではシステムダイアログで短辺とじの両面印刷を選択してください。切断して積み重ねる場合は片面印刷が必要です。実際のサイズはシステムのドライバーによって異なります。
+	PDF sheet:	PDF用紙:
+	Preparing PDF / waiting for the system print dialog…	PDFを準備中 / システム印刷ダイアログを待機中…
+	Printer, copies, collate, two-sided printing and output paper are chosen in the system dialog. Paper here sets the PDF sheet size. Keep All pages, one page per sheet and 100% scale there to preserve this preview.	プリンター、部数、部単位、両面印刷、出力用紙はシステムダイアログで選択します。ここでの用紙設定はPDFの用紙サイズを指定します。このプレビューを維持するには、システムダイアログで全ページ、用紙1枚につき1ページ、倍率100%を維持してください。
+	System print dialog…	システム印刷ダイアログ…

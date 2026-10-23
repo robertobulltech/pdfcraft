@@ -2791,3 +2791,13 @@ certificate	Version	الإصدار
 	field names can't contain a period: {name}	لا يمكن أن تحتوي أسماء الحقول على نقطة: {name}
 	two cells would both be named {name}	ستحمل خليتان الاسم نفسه {name}
 	a field named {name} already exists	يوجد حقل باسم {name} بالفعل
+
+# Flatpak system print portal (#1905).
+	Accepted by the system print service; physical completion is not reported	قبلتها خدمة الطباعة في النظام؛ لا يُبلّغ عن اكتمال الطباعة الفعلية
+	Cancelling system printing…	جارٍ إلغاء الطباعة عبر النظام…
+	Finish or cancel the current system print dialog before printing again	أكمل مربع حوار الطباعة الحالي للنظام أو ألغِه قبل الطباعة مجددًا
+	Grayscale uses Print as image. For booklets choose short-edge duplex in the system dialog; cut and stack requires single-sided output. Physical size depends on the host driver.	يستخدم التدرج الرمادي خيار الطباعة كصورة. للكتيبات، اختر الطباعة على الوجهين بقلب الحافة القصيرة في مربع حوار النظام؛ يتطلب القص والتكديس إخراجًا على وجه واحد. يعتمد الحجم الفعلي على برنامج تشغيل النظام.
+	PDF sheet:	ورقة PDF:
+	Preparing PDF / waiting for the system print dialog…	جارٍ إعداد PDF / انتظار مربع حوار الطباعة للنظام…
+	Printer, copies, collate, two-sided printing and output paper are chosen in the system dialog. Paper here sets the PDF sheet size. Keep All pages, one page per sheet and 100% scale there to preserve this preview.	تُختار الطابعة والنسخ والترتيب والطباعة على الوجهين وورق الإخراج في مربع حوار النظام. يحدد الورق هنا حجم ورقة PDF. احتفظ هناك بكل الصفحات وصفحة واحدة لكل ورقة ومقياس 100% للحفاظ على هذه المعاينة.
+	System print dialog…	مربع حوار الطباعة للنظام…

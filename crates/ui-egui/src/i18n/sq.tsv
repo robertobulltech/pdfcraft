@@ -2500,3 +2500,13 @@ animation effects	Off	Joaktiv
 	field names can't contain a period: {name}	emrat e fushave nuk mund të përmbajnë pikë: {name}
 	two cells would both be named {name}	dy qeliza do të kishin të dyja emrin {name}
 	a field named {name} already exists	ekziston tashmë një fushë me emrin {name}
+
+# Flatpak system print portal (#1905).
+	Accepted by the system print service; physical completion is not reported	U pranua nga shërbimi i printimit të sistemit; përfundimi fizik nuk raportohet
+	Cancelling system printing…	Po anulohet printimi i sistemit…
+	Finish or cancel the current system print dialog before printing again	Përfundoni ose anuloni dialogun aktual të printimit të sistemit përpara se të printoni sërish
+	Grayscale uses Print as image. For booklets choose short-edge duplex in the system dialog; cut and stack requires single-sided output. Physical size depends on the host driver.	Shkalla gri përdor Printo si imazh. Për broshurat, zgjidhni printimin dyanësh në skajin e shkurtër në dialogun e sistemit; prerja dhe stivosja kërkojnë printim njëanësh. Madhësia fizike varet nga drejtuesi i sistemit.
+	PDF sheet:	Fleta PDF:
+	Preparing PDF / waiting for the system print dialog…	Po përgatitet PDF-ja / po pritet dialogu i printimit të sistemit…
+	Printer, copies, collate, two-sided printing and output paper are chosen in the system dialog. Paper here sets the PDF sheet size. Keep All pages, one page per sheet and 100% scale there to preserve this preview.	Printeri, kopjet, renditja e kopjeve, printimi dyanësh dhe letra e daljes zgjidhen në dialogun e sistemit. Letra këtu përcakton madhësinë e fletës PDF. Mbani atje Të gjitha faqet, një faqe për fletë dhe shkallën 100% për të ruajtur këtë pamje paraprake.
+	System print dialog…	Dialogu i printimit të sistemit…
