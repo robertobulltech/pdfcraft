@@ -195,3 +195,14 @@ before-fix evidence for the i18n failures and the vulnerable lockfile entry.
 
 Linux/FreeBSD runtime tests and physical printing were not rerun locally in
 this follow-up; the original KDE/Flatpak evidence remains scoped as above.
+
+## MCP responsiveness follow-up (2026-10-24)
+
+MCP system-dialog printing now returns a pending job and polls/cancels it through
+`doc_print_job`; CLI/direct automation retains the synchronous receipts used by the physical
+Flatpak validation above. Composition and portal waits run on a worker for MCP. The synthetic
+MCP regression holds an injected portal open while serving two pings and a cancellation,
+without contacting a real desktop portal. The old synchronous dispatch failed its deadline.
+Additional regressions cover bounded receipts, terminal errors, overlap refusal, cancellation
+and session-drop cleanup. Unsupported portal arguments now fail before layout/composition.
+No additional physical-printer or host-dialog validation is claimed for this API follow-up.

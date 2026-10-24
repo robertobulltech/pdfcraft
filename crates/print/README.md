@@ -94,9 +94,15 @@ AppImage, DEB, RPM and other native installations retain craft-print's CUPS path
 macOS and the browser keep their existing backends. Flatpak never enumerates CUPS queues.
 The UI offers **System print dialog…** separately from **Save as PDF**, even with no printers.
 The `printers` automation tool returns `system_dialog: true` and an empty printer list;
-`doc_print` with `printer: "system-dialog"` (or `"default"`) opens the host dialog and returns
-`status: "accepted"` or `"cancelled"`. Copies, collate, duplex and driver options must be
-chosen in that dialog, so supplying those automation arguments is rejected.
+`doc_print` with `printer: "system-dialog"` (or `"default"`) opens the host dialog. CLI/direct
+automation waits and returns `status: "accepted"` or `"cancelled"`. MCP returns a numeric `job`
+and `status: "pending"` promptly; PDF composition and the portal wait run on a worker so other
+tool calls and pings continue. Poll `doc_print_job` with that `job`; `cancel: true` requests
+cancellation. It reports `pending`, `accepted`, `cancelled`, or `failed` with an error. Only one
+job may be pending per automation session, with the latest sixteen receipts retained. Closing
+the session requests cancellation; acceptance never means physical completion or guarantees
+that a physical job can be recalled. Copies, collate, duplex and driver options belong in the
+host dialog, so unsupported arguments are rejected before layout or PDF composition.
 
 The Linux-only `portal` module uses the maintained safe Rust zbus already used by the platform
 crate, with its async-io backend; it adds no Tokio or GUI toolkit dependency. ashpd was evaluated,

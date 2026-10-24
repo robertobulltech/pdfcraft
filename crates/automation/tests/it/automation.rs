@@ -8465,7 +8465,11 @@ fn flatpak_printing_through_tools_keeps_pdf_save() {
     for args in [json!({ "doc": doc, "printer": "system-dialog" }), json!({ "doc": doc, "printer": "system-dialog", "options": {} })] {
         assert!(matches!(a.call("doc_print", &args), Err(ToolError::Failed(_))), "valid portal arguments must reach transport: {args}");
     }
-    for args in [json!({ "doc": doc, "printer": "system-dialog", "copies": 2 }), json!({ "doc": doc, "printer": "A CUPS queue" })] {
+    for args in [
+        json!({ "doc": doc, "printer": "system-dialog", "copies": 2 }),
+        json!({ "doc": doc, "printer": "A CUPS queue" }),
+        json!({ "doc": doc, "printer": "system-dialog", "copies": 2, "pages": "999" }),
+    ] {
         assert!(matches!(a.call("doc_print", &args), Err(ToolError::InvalidArgs(m)) if m.contains("system dialog")));
     }
 }
