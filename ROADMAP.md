@@ -1,6 +1,6 @@
 # PdfCraft roadmap
 
-> **Last reviewed:** 2026-10-24 · **Last updated:** 2026-10-24 · **Change:** patch (M10 #3599: integrate main 0dd871f7 and prevent paired access-key text from changing print ranges; estimates unchanged.)
+> **Last reviewed:** 2026-10-24 · **Last updated:** 2026-10-24 · **Change:** patch (M10 #3599: integrate main d4454108 and prevent paired access-key text from changing print ranges; estimates unchanged.)
 
 **Stage: alpha** · next: beta, ~25% (ready for real work 50% → 75%) and ~400–700 h away
 
@@ -203,7 +203,8 @@ Ranked; detail and the full milestone table in [docs/roadmap.md](docs/roadmap.md
 
 ## Progress log
 
-- **2026-10-24:** M10 #3599: integrate main 0dd871f7 and prevent paired access-key text from changing print ranges; estimates unchanged.
+- **2026-10-24 (M14, #4253):** The annotation quick bar remembers Keep tool selected across restarts, including unpinning. Old and malformed settings keep safe defaults; the opt-in UI control channel reads and changes the same preference. Estimates unchanged.
+- **2026-10-24:** M10 #3599: integrate main d4454108 and prevent paired access-key text from changing print ranges; estimates unchanged.
 
 - **2026-10-23 (M10, #3599):** Print: Alt+P focuses paper selection; Alt+S focuses Size. Enter activates the focused control and Tab/Shift+Tab navigate settings. Open popups keep the keyboard; Ctrl/AltGr and Shift combinations are excluded. Default-action Return remains separate in PR #3382. Estimates unchanged.
 
@@ -682,7 +683,7 @@ Newest first: the date, what moved, and the new overall estimate.
 
 | Date | Change | Summary |
 |---|---|---|
-| 2026-10-24 | patch | M10 #3599: integrate main 0dd871f7 and prevent paired access-key text from changing print ranges; estimates unchanged. |
+| 2026-10-24 | patch | M10 #3599: integrate main d4454108 and prevent paired access-key text from changing print ranges; estimates unchanged. |
 | 2026-10-23 | minor | M10 #3599: Print paper and sizing focus shortcuts, exact Alt modifiers and popup ownership; Tab/Enter navigation retained. Default-action Return remains separate in PR #3382. Estimates unchanged. |
 | 2026-10-23 | minor | M8, #3205 follow-up: phone-pattern redaction includes the +39 country code on labelled Italian geographic numbers with a slash; dates, protocol identifiers and whole-run guards remain. Estimates unchanged. |
 | 2026-10-23 | minor | M11: image downsampling measures physical resolution after page-local UserUnit scaling, including shared nested forms; synthetic measurement and optimization regressions. Estimates unchanged. |

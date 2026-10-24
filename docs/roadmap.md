@@ -1,6 +1,6 @@
 # PdfCraft roadmap: milestones and what's next
 
-> **Last reviewed:** 2026-10-24 · **Last updated:** 2026-10-24 · **Change:** patch (M10 #3599: integrate main 0dd871f7 and prevent paired access-key text from changing print ranges; estimates unchanged.)
+> **Last reviewed:** 2026-10-24 · **Last updated:** 2026-10-24 · **Change:** patch (M10 #3599: integrate main d4454108 and prevent paired access-key text from changing print ranges; estimates unchanged.)
 
 > **Last reviewed:** 2026-10-23 · **Last updated:** 2026-10-23 · **Change:** minor (M10, #3599: Print paper and sizing keyboard shortcuts; estimates unchanged)
 > **Last reviewed:** 2026-10-22 · **Last updated:** 2026-10-22 · **Change:** minor (M14, #3558: rebase guarded macOS per-file association recovery onto current main; estimates unchanged)
@@ -256,7 +256,7 @@ Estimates unchanged.
 
 | Date | Change | Summary |
 |---|---|---|
-| 2026-10-24 | patch | M10 #3599: integrate main 0dd871f7 and prevent paired access-key text from changing print ranges; estimates unchanged. |
+| 2026-10-24 | patch | M10 #3599: integrate main d4454108 and prevent paired access-key text from changing print ranges; estimates unchanged. |
 | 2026-10-23 | minor | M10 #3599: Print paper and sizing focus shortcuts, exact Alt modifiers and popup ownership; Tab/Enter navigation retained. Default-action Return remains separate in PR #3382. Estimates unchanged. |
 | 2026-10-23 | minor | M8, #3205 follow-up: phone-pattern redaction includes the +39 country code on labelled Italian geographic numbers with a slash; dates, protocol identifiers and whole-run guards remain. Estimates unchanged. |
 | 2026-10-23 | minor | M10: Word table cells use the grid columns they span, including cells after a merged cell; synthetic export regression and CLI reproduction. Estimates unchanged. |
