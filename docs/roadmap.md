@@ -1,6 +1,6 @@
 # PdfCraft roadmap: milestones and what's next
 
-> **Last reviewed:** 2026-10-24 · **Last updated:** 2026-10-24 · **Change:** patch (M10 #1905: integrate main 0dd871f7, retain native paper/booklet handling and distinguish PDF handoff from physical printing; estimates unchanged.)
+> **Last reviewed:** 2026-10-24 · **Last updated:** 2026-10-24 · **Change:** patch (M10 #1905: integrate main d4454108, retain native paper/booklet handling and distinguish PDF handoff from physical printing; estimates unchanged.)
 
 > **Last reviewed:** 2026-10-23 · **Last updated:** 2026-10-23 · **Change:** minor (M10, PR #3066: Flatpak printing CI: portal labels translated in all 33 catalogs; ctutils 0.4.5 inherited from main; physical output unverified; estimates unchanged) · **Target:** Adobe Acrobat Pro (Acrobat DC, continuous track 26.002.21931, macOS)
 > **Last reviewed:** 2026-10-22 · **Last updated:** 2026-10-22 · **Change:** minor (M14, #3558: rebase guarded macOS per-file association recovery onto current main; estimates unchanged)
@@ -256,7 +256,7 @@ Estimates unchanged.
 
 | Date | Change | Summary |
 |---|---|---|
-| 2026-10-24 | patch | M10 #1905: integrate main 0dd871f7, retain native paper/booklet handling and distinguish PDF handoff from physical printing; estimates unchanged. |
+| 2026-10-24 | patch | M10 #1905: integrate main d4454108, retain native paper/booklet handling and distinguish PDF handoff from physical printing; estimates unchanged. |
 | 2026-10-23 | patch | M10 (PR #3066): translate the eight system-print portal labels in all 33 catalogs; integrate main including ctutils 0.4.5 for RUSTSEC-2026-0385. Physical output and readiness estimates unchanged. |
 | 2026-10-23 | minor | M10 (#1905, PR #3066): refreshed against main; Flatpak printing through PreparePrint/Print with unchanged sandbox permissions; native CUPS remains. Physical output requires hardware validation. Estimates unchanged. |
 | 2026-10-23 | minor | M8, #3205 follow-up: phone-pattern redaction includes the +39 country code on labelled Italian geographic numbers with a slash; dates, protocol identifiers and whole-run guards remain. Estimates unchanged. |
