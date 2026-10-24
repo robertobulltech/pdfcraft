@@ -1,6 +1,6 @@
 # PdfCraft roadmap: milestones and what's next
 
-> **Last reviewed:** 2026-10-24 · **Last updated:** 2026-10-24 · **Change:** patch (M7 #3813: integrate main 0dd871f7 and move image-drop regressions into the consolidated integration suite; existing browser ordering and failed-read fixes retained; estimates unchanged.)
+> **Last reviewed:** 2026-10-24 · **Last updated:** 2026-10-24 · **Change:** patch (M7 #3813: integrate main d4454108 and move image-drop regressions into the consolidated integration suite; existing browser ordering and failed-read fixes retained; estimates unchanged.)
 
 > **Last reviewed:** 2026-10-21 · **Last updated:** 2026-10-21 · **Change:** minor (M7, #3813: dropping images into the editor adds centred, selected content to the active page. Mixed browser drops finish reading as a batch and insert images before opening PDFs; failed image reads queue no empty edit. Image import without a document and specialized drop targets keep their existing behaviour. Estimates unchanged.)
 
@@ -250,7 +250,7 @@ Estimates unchanged.
 
 | Date | Change | Summary |
 |---|---|---|
-| 2026-10-24 | patch | M7 #3813: integrate main 0dd871f7 and move image-drop regressions into the consolidated integration suite; existing browser ordering and failed-read fixes retained; estimates unchanged. |
+| 2026-10-24 | patch | M7 #3813: integrate main d4454108 and move image-drop regressions into the consolidated integration suite; existing browser ordering and failed-read fixes retained; estimates unchanged. |
 | 2026-10-21 | minor | M7, #3813 review: serialize mixed browser drops and skip empty image edits, with delayed/failed-read regressions. Estimates unchanged. |
 | 2026-10-21 | minor | M7, #3813: dropping images into the editor adds centred, selected content to the active page; PDF opens, image import without a document and specialized drop targets keep their existing behaviour. Estimates unchanged. |
 | 2026-10-23 | minor | M8, #3205 follow-up: phone-pattern redaction includes the +39 country code on labelled Italian geographic numbers with a slash; dates, protocol identifiers and whole-run guards remain. Estimates unchanged. |

@@ -1,6 +1,6 @@
 # PdfCraft roadmap
 
-> **Last reviewed:** 2026-10-24 · **Last updated:** 2026-10-24 · **Change:** patch (M7 #3813: integrate main 0dd871f7 and move image-drop regressions into the consolidated integration suite; existing browser ordering and failed-read fixes retained; estimates unchanged.)
+> **Last reviewed:** 2026-10-24 · **Last updated:** 2026-10-24 · **Change:** patch (M7 #3813: integrate main d4454108 and move image-drop regressions into the consolidated integration suite; existing browser ordering and failed-read fixes retained; estimates unchanged.)
 
 > **Last reviewed:** 2026-10-21 · **Last updated:** 2026-10-21 · **Change:** minor (M7, #3813: dropping images into the editor adds centred, selected content to the active page. Mixed browser drops finish reading as a batch and insert images before opening PDFs; failed image reads queue no empty edit. Image import without a document and specialized drop targets keep their existing behaviour. Estimates unchanged.)
 
@@ -203,7 +203,9 @@ Ranked; detail and the full milestone table in [docs/roadmap.md](docs/roadmap.md
 
 ## Progress log
 
-- **2026-10-24:** M7 #3813: integrate main 0dd871f7 and move image-drop regressions into the consolidated integration suite; existing browser ordering and failed-read fixes retained; estimates unchanged.
+- **2026-10-24 (M14, #4253):** The annotation quick bar remembers Keep tool selected across restarts, including unpinning. Old and malformed settings keep safe defaults; the opt-in UI control channel reads and changes the same preference. Estimates unchanged.
+
+- **2026-10-24:** M7 #3813: integrate main d4454108 and move image-drop regressions into the consolidated integration suite; existing browser ordering and failed-read fixes retained; estimates unchanged.
 
 - **2026-10-21 (M7, #3813 review):** Browser mixed drops insert images before opening PDFs, even when the PDF reads first. Failed reads retain their read error without an empty edit or a misleading stale-target notice. Deterministic asynchronous regressions cover both cases.
 
@@ -676,7 +678,7 @@ Newest first: the date, what moved, and the new overall estimate.
 
 | Date | Change | Summary |
 |---|---|---|
-| 2026-10-24 | patch | M7 #3813: integrate main 0dd871f7 and move image-drop regressions into the consolidated integration suite; existing browser ordering and failed-read fixes retained; estimates unchanged. |
+| 2026-10-24 | patch | M7 #3813: integrate main d4454108 and move image-drop regressions into the consolidated integration suite; existing browser ordering and failed-read fixes retained; estimates unchanged. |
 | 2026-10-23 | minor | M8, #3205 follow-up: phone-pattern redaction includes the +39 country code on labelled Italian geographic numbers with a slash; dates, protocol identifiers and whole-run guards remain. Estimates unchanged. |
 | 2026-10-23 | minor | M11: image downsampling measures physical resolution after page-local UserUnit scaling, including shared nested forms; synthetic measurement and optimization regressions. Estimates unchanged. |
 | 2026-10-23 | minor | M10: Word table cells use the grid columns they span, including cells after a merged cell; synthetic export regression and CLI reproduction. Estimates unchanged. |
