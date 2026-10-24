@@ -581,6 +581,7 @@
 	Discard private data of other applications	فڕێدانی داتا تایبەتەکانی بەرنامەکانی تر
 	Discard hidden text	فڕێدانی دەقی شاراوە
 	Use Flate to encode streams that are not encoded	بەکارهێنانی Flate بۆ کۆدکردنی ئەو لێشاوانەی کۆد نەکراون
+	In streams that use LZW encoding, use Flate instead	بەکارهێنانی Flate لە جیاتی LZW بۆ ئەو لێشاوانەی بە LZW کۆد کراون
 	Remove invalid links and bookmarks	لابردنی بەستەر و دڵخوازە نادروستەکان
 	Remove unreferenced named destinations	لابردنی مەبەستە ناونراوەکانی ئاماژەپێنەکراو
 	Compress document structure (object streams)	پەستاندنی پێکهاتەی بەڵگەنامە (لێشاوەکانی تەن)
@@ -2003,6 +2004,10 @@
 	Perimeter	چێوە
 	Area	ڕووبەر
 	Drawing scale	پێوەری وێنەکێشان
+	Scale	پێوەر
+	Common scales	پێوەرە باوەکان
+	Enter a scale such as 1:50.	پێوەرێک بنووسە وەک 1:50.
+	Applying a scale switches units to m / mm.	جێبەجێکردنی پێوەر یەکەکان دەگۆڕێت بۆ م / ملم.
 	Snapping	لکاندن
 	Export measurements	هەناردەکردنی پێوانەکان
 	Open a PDF to measure it.	PDFێک بکەرەوە بۆ پێوانەکردنی.
@@ -2303,6 +2308,8 @@ key	Space	بۆشایی
 	Printer paper and scaling may differ. Check driver settings.	ڕەنگە کاغەز و پێوەری چاپکەر جیاواز بن. ڕێکخستنەکانی درایڤەر بپشکنە.
 	Drawing scale changes. Use Actual size for full-scale plans.	پێوەری وێنەکێشان دەگۆڕێت. «قەبارەی ڕاستەقینە» بەکاربهێنە بۆ پلانەکان بە پێوەری تەواو.
 	Reload documents when their files change on disk	دووبارە بارکردنی بەڵگەنامەکان کاتێک فایلەکانیان لەسەر دیسک دەگۆڕێن
+	Don't show again	جارێکی تر پیشان مەدە
+	Show a notice when a document is secured	پیشاندانی ئاگادارکردنەوە کاتێک بەڵگەنامەیەک پارێزراوە
 	This file changed on disk. Reload shows the new version and drops your unsaved changes; Save replaces it with this version.	ئەم فایلە لەسەر دیسک گۆڕاوە. «دووبارە بارکردن» وەشانی نوێ پیشان دەدات و گۆڕانکارییە پاشەکەوتنەکراوەکانت فڕێدەدات؛ «پاشەکەوتکردن» بەم وەشانە جێگەی دەگرێتەوە.
 	Reload	دووبارە بارکردن
 	Couldn't reload {name}: {e}	دووبارە بارکردنی {name} نەکرا: {e}
@@ -2714,12 +2721,6 @@ certificate	Version	وەشان
 	Pages selected	پەڕە هەڵبژێردراوەکان
 	Page properties	تایبەتمەندییەکانی پەڕە
 
+# Date picker: Today button (#4274) (AI-assisted, not separately native-reviewed)
+	Today	ئەمڕۆ
 # Flatpak system print portal (#1905).
-	Accepted by the system print service; physical completion is not reported	خزمەتگوزاری چاپی سیستەم قبووڵی کرد؛ تەواوبوونی چاپی فیزیکی ڕاناگەیەنرێت
-	Cancelling system printing…	چاپی سیستەم هەڵدەوەشێنرێتەوە…
-	Finish or cancel the current system print dialog before printing again	پێش چاپکردنەوە، دیالۆگی چاپی ئێستای سیستەم تەواو بکە یان هەڵیبەشێنەوە
-	Grayscale uses Print as image. For booklets choose short-edge duplex in the system dialog; cut and stack requires single-sided output. Physical size depends on the host driver.	پلەکانی خۆڵەمێشی چاپکردن وەک وێنە بەکاردەهێنێت. بۆ نامیلکە، لە دیالۆگی سیستەم چاپی دوولایەنە بە پەڕاندنەوە لە لێواری کورت هەڵبژێرە؛ بڕین و کۆکردنەوە چاپی تاکلایەنەی پێویستە. قەبارەی فیزیکی بە درایڤەری سیستەمەوە بەستراوە.
-	PDF sheet:	پەڕەی PDF:
-	Preparing PDF / waiting for the system print dialog…	ئامادەکردنی PDF / چاوەڕوانی دیالۆگی چاپی سیستەم…
-	Printer, copies, collate, two-sided printing and output paper are chosen in the system dialog. Paper here sets the PDF sheet size. Keep All pages, one page per sheet and 100% scale there to preserve this preview.	چاپکەر، کۆپییەکان، ڕیزکردنی کۆپییەکان، چاپی دوولایەنە و کاغەزی دەرچوو لە دیالۆگی سیستەم هەڵدەبژێردرێن. کاغەزی ئێرە قەبارەی پەڕەی PDF دیاری دەکات. بۆ پاراستنی ئەم پێشبینینە، لەوێ هەموو پەڕەکان، یەک پەڕە لە هەر کاغەزێک و پێوەری 100% بهێڵەوە.
-	System print dialog…	دیالۆگی چاپی سیستەم…

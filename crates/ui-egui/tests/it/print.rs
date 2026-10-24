@@ -907,3 +907,31 @@ fn flatpak_offers_system_printing_without_cups() {
     assert!(result.status.success(), "{}\n{}", String::from_utf8_lossy(&result.stdout), String::from_utf8_lossy(&result.stderr));
     assert!(String::from_utf8_lossy(&result.stdout).contains("1 passed"), "the child must run the Flatpak regression");
 }
+
+/// #2707: a booklet decides two-sided itself, as Acrobat does (its Print dialog hides Two-sided
+/// while Booklet is chosen): the job flips on the short edge for both sides and prints
+/// one-sided for the front or back only, and the Two-sided choice is kept for other layouts.
+#[test]
+fn a_booklet_decides_two_sided_itself() {
+    use pdfcraft_engine::print::{BookletSubset, spool::Duplex};
+    let mut h = harness();
+    assert!(h.state_mut().execute("print.dialog"));
+    h.run_steps(3);
+    h.state_mut().print_draft.duplex = Some(Duplex::LongEdge);
+    h.run_steps(1);
+    assert!(h.query_by_label("Two-sided:").is_some());
+    h.get_by_label("Booklet").click();
+    h.run_steps(2);
+    assert!(h.query_by_label("Two-sided:").is_none(), "hidden while Booklet is chosen");
+    let d = &h.state().print_draft;
+    assert_eq!(d.duplex, Some(Duplex::LongEdge), "the Two-sided choice is kept");
+    assert_eq!(d.job("x").duplex, Some(Duplex::ShortEdge), "both sides flip on the short edge");
+    for subset in [BookletSubset::FrontOnly, BookletSubset::BackOnly] {
+        h.state_mut().print_draft.booklet_subset = subset;
+        assert_eq!(h.state().print_draft.job("x").duplex, Some(Duplex::Off), "{subset:?} is one pass of a manual duplex");
+    }
+    h.get_by_label("Size").click();
+    h.run_steps(2);
+    assert!(h.query_by_label("Two-sided:").is_some());
+    assert_eq!(h.state().print_draft.job("x").duplex, Some(Duplex::LongEdge), "back to the choice");
+}

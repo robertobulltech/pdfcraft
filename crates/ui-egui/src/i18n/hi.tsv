@@ -558,6 +558,7 @@
 	Discard private data of other applications	अन्य ऐप्लिकेशन का निजी डेटा हटाएँ
 	Discard hidden text	छिपा हुआ टेक्स्ट हटाएँ
 	Use Flate to encode streams that are not encoded	जो स्ट्रीम एन्कोडेड नहीं हैं उन्हें Flate से एन्कोड करें
+	In streams that use LZW encoding, use Flate instead	LZW एन्कोडिंग वाली स्ट्रीम में इसके बजाय Flate का उपयोग करें
 	Remove invalid links and bookmarks	अमान्य लिंक और बुकमार्क हटाएँ
 	Remove unreferenced named destinations	बिना संदर्भ वाले नामित गंतव्य हटाएँ
 	Compress document structure (object streams)	दस्तावेज़ संरचना संपीड़ित करें (ऑब्जेक्ट स्ट्रीम)
@@ -1961,6 +1962,10 @@
 	Perimeter	परिमाप
 	Area	क्षेत्रफल
 	Drawing scale	रेखाचित्र पैमाना
+	Scale	पैमाना
+	Common scales	सामान्य पैमाने
+	Enter a scale such as 1:50.	1:50 जैसा पैमाना दर्ज करें।
+	Applying a scale switches units to m / mm.	पैमाना लागू करने पर इकाइयाँ m / mm में बदल जाती हैं।
 	Snapping	स्नैपिंग
 	Export measurements	मापन निर्यात करें
 	Open a PDF to measure it.	मापने के लिए एक पीडीएफ़ खोलें।
@@ -2250,6 +2255,8 @@ key	Space	Space
 	Printer paper and scaling may differ. Check driver settings.	प्रिंटर का काग़ज़ और स्केलिंग अलग हो सकते हैं। ड्राइवर सेटिंग्स जाँचें।
 	Drawing scale changes. Use Actual size for full-scale plans.	रेखाचित्र पैमाना बदल जाता है। पूर्ण-पैमाने योजनाओं के लिए “वास्तविक आकार” चुनें।
 	Reload documents when their files change on disk	जब उनकी फ़ाइलें डिस्क पर बदलें तो दस्तावेज़ दोबारा लोड करें
+	Don't show again	फिर से न दिखाएँ
+	Show a notice when a document is secured	दस्तावेज़ सुरक्षित होने पर सूचना दिखाएँ
 	This file changed on disk. Reload it to see the new version; your unsaved changes will be lost.	यह फ़ाइल डिस्क पर बदल गई है। नया संस्करण देखने के लिए उसे दोबारा लोड करें; आपके असहेजे बदलाव खो जाएँगे।
 	Reload	दोबारा लोड करें
 	Couldn't reload {name}: {e}	{name} दोबारा लोड नहीं हो सका: {e}
@@ -2751,12 +2758,14 @@ theme	Appearance	स्वरूप
 	two cells would both be named {name}	दो सेल का नाम {name} हो जाएगा
 	a field named {name} already exists	{name} नाम का फ़ील्ड पहले से मौजूद है
 
+# Date picker: Today button (#4274) (AI-assisted, not separately native-reviewed)
+	Today	आज
+
+# AI-assisted additions for restoring the last view (#1767) (2026-10-22); not reviewed by a native speaker.
+	Restore the last view (page, zoom and page display) when a document is opened again	दस्तावेज़ फिर से खोलने पर पिछला दृश्य (पृष्ठ, ज़ूम और पृष्ठ प्रदर्शन) पुनर्स्थापित करें
+	Attach a file…	फ़ाइल संलग्न करें…
+	Attach {name}	{name} संलग्न करें
+	Attaching files is not available on the web yet	वेब पर अभी फ़ाइलें संलग्न करना उपलब्ध नहीं है
+	Delete attachment	अनुलग्नक हटाएँ
+	Delete attachment {key}	अनुलग्नक {key} हटाएँ
 # Flatpak system print portal (#1905).
-	Accepted by the system print service; physical completion is not reported	सिस्टम की मुद्रण सेवा ने स्वीकार कर लिया है; वास्तविक मुद्रण पूरा होने की सूचना नहीं दी जाती
-	Cancelling system printing…	सिस्टम मुद्रण रद्द किया जा रहा है…
-	Finish or cancel the current system print dialog before printing again	दोबारा मुद्रण से पहले मौजूदा सिस्टम मुद्रण संवाद पूरा करें या रद्द करें
-	Grayscale uses Print as image. For booklets choose short-edge duplex in the system dialog; cut and stack requires single-sided output. Physical size depends on the host driver.	ग्रेस्केल के लिए चित्र के रूप में प्रिंट करें का उपयोग होता है। पुस्तिकाओं के लिए सिस्टम संवाद में छोटे किनारे से दोतरफ़ा मुद्रण चुनें; काटकर ढेर लगाने के लिए एकतरफ़ा मुद्रण आवश्यक है। वास्तविक आकार सिस्टम के ड्राइवर पर निर्भर करता है।
-	PDF sheet:	PDF शीट:
-	Preparing PDF / waiting for the system print dialog…	PDF तैयार हो रहा है / सिस्टम मुद्रण संवाद की प्रतीक्षा है…
-	Printer, copies, collate, two-sided printing and output paper are chosen in the system dialog. Paper here sets the PDF sheet size. Keep All pages, one page per sheet and 100% scale there to preserve this preview.	प्रिंटर, प्रतियाँ, क्रमवार प्रतियाँ, दोतरफ़ा मुद्रण और आउटपुट कागज़ सिस्टम संवाद में चुने जाते हैं। यहाँ का कागज़ PDF शीट का आकार तय करता है। इस पूर्वावलोकन को बनाए रखने के लिए वहाँ सभी पृष्ठ, प्रति शीट एक पृष्ठ और 100% पैमाना रखें।
-	System print dialog…	सिस्टम मुद्रण संवाद…

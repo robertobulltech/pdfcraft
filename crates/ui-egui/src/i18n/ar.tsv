@@ -611,6 +611,7 @@
 	Discard private data of other applications	تجاهل البيانات الخاصة بالتطبيقات الأخرى
 	Discard hidden text	تجاهل النص المخفي
 	Use Flate to encode streams that are not encoded	استخدام Flate لترميز التدفقات غير المرمَّزة
+	In streams that use LZW encoding, use Flate instead	في التدفقات التي تستخدم ترميز LZW، استخدام Flate بدلاً منه
 	Remove invalid links and bookmarks	إزالة الروابط والإشارات المرجعية غير الصالحة
 	Remove unreferenced named destinations	إزالة الوجهات المسماة غير المشار إليها
 	Compress document structure (object streams)	ضغط بنية المستند (تدفقات الكائنات)
@@ -2040,6 +2041,10 @@
 	Perimeter	المحيط
 	Area	المساحة
 	Drawing scale	مقياس الرسم
+	Scale	المقياس
+	Common scales	مقاييس شائعة
+	Enter a scale such as 1:50.	أدخل مقياسًا مثل 1:50.
+	Applying a scale switches units to m / mm.	يؤدي تطبيق المقياس إلى تحويل الوحدات إلى م / مم.
 	Snapping	الانجذاب
 	Export measurements	تصدير القياسات
 	Open a PDF to measure it.	افتح ملف PDF لقياسه.
@@ -2193,6 +2198,7 @@ calendar date	October	أكتوبر
 calendar date	November	نوفمبر
 calendar date	December	ديسمبر
 	Reopen the files that were open when PdfCraft last closed	إعادة فتح الملفات التي كانت مفتوحة عند آخر إغلاق لـ PdfCraft
+	Restore the last view (page, zoom and page display) when a document is opened again	استعادة آخر عرض (الصفحة والتكبير وعرض الصفحات) عند فتح المستند مرة أخرى
 	Clear Recent Files	مسح الملفات الأخيرة
 	Remove from Recent	إزالة من الأخيرة
 	Remove {name} from Recent	إزالة {name} من الأخيرة
@@ -2340,6 +2346,8 @@ key	Space	مسافة
 	Printer paper and scaling may differ. Check driver settings.	قد يختلف ورق الطابعة ومقياس الطباعة. تحقق من إعدادات برنامج التشغيل.
 	Drawing scale changes. Use Actual size for full-scale plans.	يتغير مقياس الرسم. استخدم الحجم الفعلي لطباعة المخططات بمقياسها الأصلي.
 	Reload documents when their files change on disk	إعادة تحميل المستندات عند تغيّر ملفاتها على القرص
+	Don't show again	عدم الإظهار مرة أخرى
+	Show a notice when a document is secured	إظهار إشعار عندما يكون المستند مؤمَّنًا
 	Always use my default zoom and page layout	استخدام التكبير وتخطيط الصفحة الافتراضيين دائمًا
 	This file changed on disk. Reload shows the new version and drops your unsaved changes; Save replaces it with this version.	تغيّر هذا الملف على القرص. «إعادة التحميل» تعرض النسخة الجديدة وتُسقط تغييراتك غير المحفوظة؛ و«حفظ» يستبدلها بهذه النسخة.
 	Reload	إعادة تحميل
@@ -2758,6 +2766,11 @@ certificate	Version	الإصدار
 	Make properties default	جعل الخصائص افتراضية
 	Pages selected	الصفحات المحددة
 	Page properties	خصائص الصفحة
+	Attach a file…	إرفاق ملف…
+	Delete attachment	حذف المرفق
+	Attaching files is not available on the web yet	إرفاق الملفات غير متاح على الويب بعد
+	Attach {name}	إرفاق {name}
+	Delete attachment {key}	حذف المرفق {key}
 	Bulleted list	قائمة نقطية
 	Numbered list	قائمة مرقمة
 	Alignment	المحاذاة
@@ -2792,12 +2805,6 @@ certificate	Version	الإصدار
 	two cells would both be named {name}	ستحمل خليتان الاسم نفسه {name}
 	a field named {name} already exists	يوجد حقل باسم {name} بالفعل
 
+# Date picker: Today button (#4274) (AI-assisted, not separately native-reviewed)
+	Today	اليوم
 # Flatpak system print portal (#1905).
-	Accepted by the system print service; physical completion is not reported	قبلتها خدمة الطباعة في النظام؛ لا يُبلّغ عن اكتمال الطباعة الفعلية
-	Cancelling system printing…	جارٍ إلغاء الطباعة عبر النظام…
-	Finish or cancel the current system print dialog before printing again	أكمل مربع حوار الطباعة الحالي للنظام أو ألغِه قبل الطباعة مجددًا
-	Grayscale uses Print as image. For booklets choose short-edge duplex in the system dialog; cut and stack requires single-sided output. Physical size depends on the host driver.	يستخدم التدرج الرمادي خيار الطباعة كصورة. للكتيبات، اختر الطباعة على الوجهين بقلب الحافة القصيرة في مربع حوار النظام؛ يتطلب القص والتكديس إخراجًا على وجه واحد. يعتمد الحجم الفعلي على برنامج تشغيل النظام.
-	PDF sheet:	ورقة PDF:
-	Preparing PDF / waiting for the system print dialog…	جارٍ إعداد PDF / انتظار مربع حوار الطباعة للنظام…
-	Printer, copies, collate, two-sided printing and output paper are chosen in the system dialog. Paper here sets the PDF sheet size. Keep All pages, one page per sheet and 100% scale there to preserve this preview.	تُختار الطابعة والنسخ والترتيب والطباعة على الوجهين وورق الإخراج في مربع حوار النظام. يحدد الورق هنا حجم ورقة PDF. احتفظ هناك بكل الصفحات وصفحة واحدة لكل ورقة ومقياس 100% للحفاظ على هذه المعاينة.
-	System print dialog…	مربع حوار الطباعة للنظام…

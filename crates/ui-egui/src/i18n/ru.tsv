@@ -604,6 +604,7 @@
 	Discard private data of other applications	Удалить личные данные других приложений
 	Discard hidden text	Удалить скрытый текст
 	Use Flate to encode streams that are not encoded	Использовать Flate для кодирования некодированных потоков
+	In streams that use LZW encoding, use Flate instead	Использовать Flate вместо LZW в потоках с кодированием LZW
 	Remove invalid links and bookmarks	Удалить недействительные ссылки и закладки
 	Remove unreferenced named destinations	Удалить неиспользуемые именованные места назначения
 	Compress document structure (object streams)	Сжать структуру документа (потоки объектов)
@@ -2041,6 +2042,10 @@
 	Perimeter	Периметр
 	Area	Площадь
 	Drawing scale	Масштаб чертежа
+	Scale	Масштаб
+	Common scales	Распространённые масштабы
+	Enter a scale such as 1:50.	Введите масштаб, например 1:50.
+	Applying a scale switches units to m / mm.	При применении масштаба единицы переключаются на м / мм.
 	Snapping	Привязка
 	Export measurements	Экспортировать измерения
 	Open a PDF to measure it.	Откройте PDF для измерения.
@@ -2108,7 +2113,10 @@
 	Default zoom	Масштаб по умолчанию
 	Used when a PDF doesn't ask for a layout or zoom. Continuous scrolling never snaps between pages.	Используется, когда PDF не запрашивает макет или масштаб. Непрерывная прокрутка никогда не привязывается между страницами.
 	Reopen the files that were open when PdfCraft last closed	Повторно открывать файлы, которые были открыты при последнем закрытии PdfCraft
+	Restore the last view (page, zoom and page display) when a document is opened again	Восстанавливать последний вид (страницу, масштаб и показ страниц) при повторном открытии документа
 	Reload documents when their files change on disk	Перезагружать документы при изменении их файлов на диске
+	Don't show again	Больше не показывать
+	Show a notice when a document is secured	Показывать уведомление, когда документ защищён
 	Always use my default zoom and page layout	Всегда использовать мой масштаб и макет страницы по умолчанию
 	This file changed on disk. Reload shows the new version and drops your unsaved changes; Save replaces it with this version.	Этот файл был изменён на диске. «Перезагрузить» покажет новую версию и отбросит несохранённые изменения; «Сохранить» заменит её этой версией.
 	Reload	Перезагрузить
@@ -2394,6 +2402,11 @@ animation effects	Off	Выкл
 	Make properties default	Сделать свойства стандартными
 	Pages selected	Выделенные страницы
 	Page properties	Свойства страницы
+	Attach a file…	Прикрепить файл…
+	Delete attachment	Удалить вложение
+	Attaching files is not available on the web yet	Прикрепление файлов в веб-версии пока недоступно
+	Attach {name}	Прикрепить {name}
+	Delete attachment {key}	Удалить вложение {key}
 	Font	Шрифт
 	Bulleted list	Маркированный список
 	Numbered list	Нумерованный список
@@ -2429,12 +2442,6 @@ animation effects	Off	Выкл
 	two cells would both be named {name}	две ячейки получили бы одно имя {name}
 	a field named {name} already exists	поле с именем {name} уже существует
 
+# Date picker: Today button (#4274) (AI-assisted, not separately native-reviewed)
+	Today	Сегодня
 # Flatpak system print portal (#1905).
-	Accepted by the system print service; physical completion is not reported	Принято системной службой печати; о физическом завершении не сообщается
-	Cancelling system printing…	Отмена системной печати…
-	Finish or cancel the current system print dialog before printing again	Завершите или отмените текущий системный диалог печати перед повторной печатью
-	Grayscale uses Print as image. For booklets choose short-edge duplex in the system dialog; cut and stack requires single-sided output. Physical size depends on the host driver.	Оттенки серого используют Печать как изображение. Для буклетов выберите в системном диалоге двустороннюю печать по короткому краю; резка и укладка требуют односторонней печати. Физический размер зависит от системного драйвера.
-	PDF sheet:	Лист PDF:
-	Preparing PDF / waiting for the system print dialog…	Подготовка PDF / ожидание системного диалога печати…
-	Printer, copies, collate, two-sided printing and output paper are chosen in the system dialog. Paper here sets the PDF sheet size. Keep All pages, one page per sheet and 100% scale there to preserve this preview.	Принтер, копии, подбор по копиям, двусторонняя печать и выходная бумага выбираются в системном диалоге. Бумага здесь задаёт размер листа PDF. Сохраните там Все страницы, одну страницу на лист и масштаб 100%, чтобы сохранить этот предпросмотр.
-	System print dialog…	Системный диалог печати…

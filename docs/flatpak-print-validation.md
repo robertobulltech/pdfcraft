@@ -120,7 +120,7 @@ rerun; their backends are unchanged. X11 parent identifiers are supported; Wayla
 unparented, nonmodal host dialog because eframe cannot safely export an xdg-foreign handle.
 Cancellation closes the portal request; recalling a physical job already handed to the host
 is not guaranteed. The host's physical paper/scale choices still require attention; conflicting known page/N-up/
-reverse/scale settings are refused before handoff, and only PDF file output is supported.
+reverse/scale settings are refused before handoff; PdfCraft supplies only PDF input to the host, whose dialog handles physical printer output.
 
 Private validation artifacts (logs, synthetic PDFs and local screenshots) were kept outside
 the repository. No third-party desktop screenshots, binary fixtures or fonts are committed.
