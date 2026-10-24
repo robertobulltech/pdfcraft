@@ -172,8 +172,6 @@ pub enum ExtractPages {
 pub struct ExtractDraft {
     /// Keep manual selection as the default extraction workflow.
     pub selection: ExtractPages,
-    /// Comma/semicolon-separated physical 1-based numbers and inclusive ranges.
-    pub range: String,
     /// Filter by physical page number, independently of where a range begins.
     pub parity: pdfcraft_engine::PageParity,
     /// Each page as its own file.
@@ -184,18 +182,39 @@ pub struct ExtractDraft {
     /// the document's name when it opens; empty means that name too. As separate files each
     /// page is `<name> (page N).pdf`, and a single page the user renamed is `<name>.pdf`.
     pub name: String,
+    /// The pages to extract as typed ranges, 1-based ("1-5, 8, 11-13") (#3593). Empty means the
+    /// selected pages (or the current one); the dialog opens with it empty.
+    pub pages: String,
+}
+
+impl ExtractDraft {
+    /// Resolve the chosen extraction mode and physical parity, preserving main's typed order
+    /// and deduplication for dialog ranges. Callers reject empty results.
+    pub fn pages_to_extract(&self, selected: Vec<usize>, count: usize) -> Result<Vec<usize>, String> {
+        self.pages(count, &selected).map_err(|e| e.said(&|s| crate::i18n::t(s).to_string()))
+    }
 }
 
 impl ExtractDraft {
     /// Resolve extraction targets without changing the thumbnail selection or document.
     /// Invalid ranges fail; an empty result must be rejected before extracting or deleting.
     pub fn pages(&self, count: usize, selected: &[usize]) -> Result<Vec<usize>, pdfcraft_engine::print::PrintError> {
-        let (pages, range) = match self.selection {
-            ExtractPages::Selection => (Some(selected), None),
-            ExtractPages::All => (None, None),
-            ExtractPages::Range => (None, Some(self.range.as_str())),
+        // Keep main's typed order, with the shared parser bounding work before allocation.
+        let typed = if self.selection != ExtractPages::All && !self.pages.trim().is_empty() {
+            // Validate input and total expansion before the legacy order-preserving parser allocates.
+            let _ = pdfcraft_engine::page_selection::parse(&self.pages, count)?;
+            let pages = pdfcraft_engine::print::select_pages(count, Some(&self.pages), &[], pdfcraft_engine::print::Subset::All, false)?;
+            let mut seen = std::collections::HashSet::new();
+            Some(pages.into_iter().filter(|page| seen.insert(*page)).collect::<Vec<_>>())
+        } else {
+            None
         };
-        pdfcraft_engine::page_selection::select(count, pages, range, self.parity)
+        let pages = match self.selection {
+            ExtractPages::Selection => Some(typed.as_deref().unwrap_or(selected)),
+            ExtractPages::All => None,
+            ExtractPages::Range => Some(typed.as_deref().unwrap_or(&[])),
+        };
+        pdfcraft_engine::page_selection::select(count, pages, None, self.parity)
     }
 }
 
@@ -248,12 +267,13 @@ pub(crate) fn attachment_file_name(name: &str) -> String {
     if reserved { format!("_{name}") } else { name.to_string() }
 }
 
-/// Whether `name` names a file directly inside a folder: not empty, `.` or `..`, with no `/` or
-/// `\\`, and no drive (`C:`). On Windows any `:` is refused, which also rules out alternate data
-/// streams.
+/// Whether `name` names a file directly inside a folder: not empty, with no `/` or `\\`, no drive
+/// (`C:`), and not ending in `.` or a space (which also rules out `.` and `..`): Windows drops a
+/// trailing dot or space, so `report.` would write `report`. On Windows any `:` is refused, which
+/// also rules out alternate data streams.
 pub(crate) fn is_plain_file_name(name: &str) -> bool {
     let drive = matches!(name.as_bytes(), [letter, b':', ..] if letter.is_ascii_alphabetic());
-    !(name.is_empty() || name == "." || name == ".." || name.contains(['/', '\\']) || drive || (cfg!(windows) && name.contains(':')))
+    !(name.is_empty() || name.ends_with(['.', ' ']) || name.contains(['/', '\\']) || drive || (cfg!(windows) && name.contains(':')))
 }
 
 /// Pages ▸ Rotate Pages.
@@ -638,10 +658,10 @@ impl PdfCraftApp {
     /// Open extraction with the current manual selection and the active document's file name.
     pub fn open_extract_dialog(&mut self) {
         self.extract_draft.selection = ExtractPages::Selection;
-        self.extract_draft.range.clear();
         self.extract_draft.parity = pdfcraft_engine::PageParity::Both;
         self.extract_draft.name =
             self.active_ids().and_then(|(_, id)| self.session.get(id)).map(|d| strip_pdf(&d.name).to_string()).unwrap_or_default();
+        self.extract_draft.pages.clear();
         self.dialog = Some(crate::Dialog::Extract);
     }
 
@@ -654,22 +674,24 @@ impl PdfCraftApp {
         }
 
         let Some((i, id)) = self.active_ids() else { return };
+        let opts = self.extract_draft.clone();
         let Some(doc) = self.session.get(id) else { return };
-        let selected = self.views.get(i).map(|v| v.target_pages()).unwrap_or_default();
-        let pages = match self.extract_draft.pages(doc.info.pages.len(), &selected) {
+        let Some(view) = self.views.get(i) else { return };
+        let pages = match opts.pages_to_extract(view.target_pages(), doc.info.pages.len()) {
             Ok(pages) if !pages.is_empty() => pages,
             Ok(_) => {
                 self.notify_tr("No pages selected");
                 return;
             }
             Err(e) => {
-                let message = e.said(&|s| crate::i18n::t(s).to_string());
-                self.notify_fmt("Couldn't extract pages: {e}", &[("e", &message)]);
+                self.notify_fmt("Couldn't extract pages: {e}", &[("e", &e)]);
                 return;
             }
         };
+        // Deleting takes the pages in document order (typed ranges may run backwards).
+        let mut doomed = pages.clone();
+        doomed.sort_unstable();
         let stem = self.session.get(id).map(|d| strip_pdf(&d.name).to_string()).unwrap_or_default();
-        let opts = self.extract_draft.clone();
         // The name typed in the dialog (#737), else the document's.
         let chosen = file_stem_from_user(&opts.name);
         let renamed = !chosen.is_empty() && chosen != file_stem_from_user(&stem);
@@ -699,34 +721,33 @@ impl PdfCraftApp {
                 }
                 let unchanged = app.session.get(id).map(|d| d.edit_generation()) == generation;
                 if unchanged && app.active_ids().map(|(_, active)| active) == Some(id) {
-                    app.apply_edit(pdfcraft_engine::Edit::DeletePages { pages });
+                    app.apply_edit(pdfcraft_engine::Edit::DeletePages { pages: doomed });
                 } else {
                     app.notify_tr("The pages were extracted but not deleted, because the document changed while you were choosing a folder.");
                 }
             });
             return;
-        } else {
-            match self.session.extract(id, &pages) {
-                Ok(bytes) => {
-                    let message = if pages.len() == 1 {
-                        tl!("Extracted 1 page").to_string()
-                    } else {
-                        crate::i18n::fmt(tl!("Extracted {n} pages"), &[("n", &pages.len().to_string())])
-                    };
-                    // Save As offers the tab's name, so a name typed in the dialog is kept.
-                    let name = if renamed { format!("{base}.pdf") } else { format!("{stem} (extract).pdf") };
-                    self.open_created(&name, bytes, &message)
-                }
-                Err(e) => {
-                    self.notify_fmt("Couldn't extract pages: {e}", &[("e", &e.to_string())]);
-                    return;
-                }
+        }
+        match self.session.extract(id, &pages) {
+            Ok(bytes) => {
+                let message = if pages.len() == 1 {
+                    tl!("Extracted 1 page").to_string()
+                } else {
+                    crate::i18n::fmt(tl!("Extracted {n} pages"), &[("n", &pages.len().to_string())])
+                };
+                // Save As offers the tab's name, so a name typed in the dialog is kept.
+                let name = if renamed { format!("{base}.pdf") } else { format!("{stem} (extract).pdf") };
+                self.open_created(&name, bytes, &message)
+            }
+            Err(e) => {
+                self.notify_fmt("Couldn't extract pages: {e}", &[("e", &e.to_string())]);
+                return;
             }
         }
         if opts.delete {
             // Back on the original document.
             self.active = Some(i);
-            self.apply_edit(pdfcraft_engine::Edit::DeletePages { pages });
+            self.apply_edit(pdfcraft_engine::Edit::DeletePages { pages: doomed });
         }
     }
 
@@ -865,7 +886,11 @@ impl PdfCraftApp {
                 // The reading-colours preference is app-wide: the newly created document starts with it.
                 self.session.set_reading_colors(id, self.reading_colors);
                 let Some(doc) = self.session.get(id) else { return };
-                self.views.push(crate::DocView::new(id, &doc.info, self.view_defaults));
+                let mut view = crate::DocView::new(id, &doc.info, self.view_defaults);
+                if self.full_screen {
+                    view.enter_presentation();
+                }
+                self.views.push(view);
                 self.active = Some(self.views.len() - 1);
                 self.notify_tr(message);
             }
@@ -920,6 +945,7 @@ impl PdfCraftApp {
         let Some(doc) = self.session.get(id) else { return };
         let stem = doc.name.trim_end_matches(".pdf").trim_end_matches(".PDF").to_string();
         let ext = format.extension();
+        let folder = doc.path.clone();
         let bytes = doc.export_office(format);
         #[cfg(not(target_arch = "wasm32"))]
         {
@@ -934,6 +960,7 @@ impl PdfCraftApp {
                         .set_title(tl!("Export").to_string())
                         .add_filter(ext.to_uppercase(), &[ext])
                         .set_file_name(format!("{stem}.{ext}"));
+                    let dialog = crate::editing::in_document_folder(dialog, folder.as_deref());
                     self.ask_one(crate::pickers::Ask::Save(dialog), None, write);
                 }
             }
@@ -1016,6 +1043,7 @@ impl PdfCraftApp {
         let stem = doc.name.trim_end_matches(".pdf").trim_end_matches(".PDF").to_string();
         #[cfg(not(target_arch = "wasm32"))]
         {
+            let folder = doc.path.clone();
             let xfa = doc.info.xfa.is_some();
             let write = move |app: &mut Self, path: std::path::PathBuf| {
                 // Include what was typed while the save panel was open (#166).
@@ -1055,6 +1083,7 @@ impl PdfCraftApp {
                             .add_filter("CSV", &["csv"])
                             .add_filter(tl!("Text").to_string(), &["txt"])
                     };
+                    let d = crate::editing::in_document_folder(d, folder.as_deref());
                     self.ask_one(crate::pickers::Ask::Save(d), None, write);
                 }
             }
@@ -1126,6 +1155,16 @@ mod stem_tests {
     }
 
     #[test]
+    fn plain_file_names_do_not_end_in_a_dot_or_a_space() {
+        for good in ["report.pdf", "report", ".hidden", "a b.pdf", "資料.pdf"] {
+            assert!(is_plain_file_name(good), "{good}");
+        }
+        for bad in ["report.", "report.pdf.", "report.pdf ", "report. . ", " ", "...", ". "] {
+            assert!(!is_plain_file_name(bad), "{bad:?}");
+        }
+    }
+
+    #[test]
     fn write_files_refuses_names_that_leave_the_folder() {
         let dir = std::env::temp_dir().join(format!("pdfcraft-write-files-{}", std::process::id()));
         let _ = std::fs::remove_dir_all(&dir);
@@ -1135,7 +1174,7 @@ mod stem_tests {
         let mut app = crate::PdfCraftApp::new();
         app.set_option("language", "en").unwrap();
         app.export_dir_override = Some(out.to_string_lossy().into_owned());
-        for bad in ["../x.pdf", "..", ".", "", "sub/x.pdf", "sub\\x.pdf", "C:x.pdf", absolute.as_str()] {
+        for bad in ["../x.pdf", "..", ".", "", "sub/x.pdf", "sub\\x.pdf", "C:x.pdf", "x.pdf.", absolute.as_str()] {
             assert!(!is_plain_file_name(bad), "{bad}");
             // A plain name first: nothing is written when any name in the batch is refused.
             app.write_files(&[("ok.pdf".into(), std::sync::Arc::new(b"%PDF".to_vec())), (bad.into(), std::sync::Arc::new(b"%PDF".to_vec()))], "t");
