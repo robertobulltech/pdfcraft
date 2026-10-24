@@ -1,6 +1,6 @@
 # PdfCraft roadmap: milestones and what's next
 
-> **Last reviewed:** 2026-10-24 · **Last updated:** 2026-10-24 · **Change:** patch (M4 #3726: integrate main 0dd871f7, preserve the upstream typed-order extraction path alongside bounded range and odd/even selection; completed work remains outside Missing; estimates unchanged.)
+> **Last reviewed:** 2026-10-24 · **Last updated:** 2026-10-24 · **Change:** patch (M4 #3726: integrate main d4454108, preserve the upstream typed-order extraction path alongside bounded range and odd/even selection; completed work remains outside Missing; estimates unchanged.)
 
 > **Last reviewed:** 2026-10-20 · **Last updated:** 2026-10-20 · **Change:** patch (M4 #3726: Extract Pages range and odd/even selection; estimates unchanged)
 
@@ -250,7 +250,7 @@ Estimates unchanged.
 
 | Date | Change | Summary |
 |---|---|---|
-| 2026-10-24 | patch | M4 #3726: integrate main 0dd871f7, preserve the upstream typed-order extraction path alongside bounded range and odd/even selection; completed work remains outside Missing; estimates unchanged. |
+| 2026-10-24 | patch | M4 #3726: integrate main d4454108, preserve the upstream typed-order extraction path alongside bounded range and odd/even selection; completed work remains outside Missing; estimates unchanged. |
 | 2026-10-20 | patch | M4 #3726: Extract Pages range and odd/even selection shares bounded parsing across UI/tool, retaining manual selection. Estimates unchanged. |
 | 2026-10-23 | minor | M8, #3205 follow-up: phone-pattern redaction includes the +39 country code on labelled Italian geographic numbers with a slash; dates, protocol identifiers and whole-run guards remain. Estimates unchanged. |
 | 2026-10-23 | minor | M10: Word table cells use the grid columns they span, including cells after a merged cell; synthetic export regression and CLI reproduction. Estimates unchanged. |

@@ -1,6 +1,6 @@
 # PdfCraft roadmap
 
-> **Last reviewed:** 2026-10-24 · **Last updated:** 2026-10-24 · **Change:** patch (M4 #3726: integrate main 0dd871f7, preserve the upstream typed-order extraction path alongside bounded range and odd/even selection; completed work remains outside Missing; estimates unchanged.)
+> **Last reviewed:** 2026-10-24 · **Last updated:** 2026-10-24 · **Change:** patch (M4 #3726: integrate main d4454108, preserve the upstream typed-order extraction path alongside bounded range and odd/even selection; completed work remains outside Missing; estimates unchanged.)
 
 **Stage: alpha** · next: beta, ~25% (ready for real work 50% → 75%) and ~400–700 h away
 
@@ -201,7 +201,9 @@ Ranked; detail and the full milestone table in [docs/roadmap.md](docs/roadmap.md
 
 ## Progress log
 
-- **2026-10-24:** M4 #3726: integrate main 0dd871f7, preserve the upstream typed-order extraction path alongside bounded range and odd/even selection; completed work remains outside Missing; estimates unchanged.
+- **2026-10-24 (M14, #4253):** The annotation quick bar remembers Keep tool selected across restarts, including unpinning. Old and malformed settings keep safe defaults; the opt-in UI control channel reads and changes the same preference. Estimates unchanged.
+
+- **2026-10-24:** M4 #3726: integrate main d4454108, preserve the upstream typed-order extraction path alongside bounded range and odd/even selection; completed work remains outside Missing; estimates unchanged.
 
 - **2026-10-20 (M4, #3726):** Extract Pages offers physical page ranges and odd/even filters alongside manual selection. UI and headless extraction share bounded parsing; invalid/empty selections are rejected before output or deletion. Synthetic regressions cover extraction, preservation and undo. Review follow-up: the milestone table lists these capabilities under completed work, separately from the remaining gaps. Estimates unchanged.
 - **2026-10-23 (M7, #4280):** Edit text names each standard stand-in font after its face (`PCEdTimesBold`, ...) instead of one shared `PCEdHelv`. Rewriting a bold paragraph whose subset lacks an accent no longer repoints the paragraphs set earlier in a regular stand-in at Times-Bold, and the editor's frame stays on the paragraph being edited. Pages saved by older builds keep their shared name and are not repaired. Estimates unchanged.
@@ -679,7 +681,7 @@ Newest first: the date, what moved, and the new overall estimate.
 
 | Date | Change | Summary |
 |---|---|---|
-| 2026-10-24 | patch | M4 #3726: integrate main 0dd871f7, preserve the upstream typed-order extraction path alongside bounded range and odd/even selection; completed work remains outside Missing; estimates unchanged. |
+| 2026-10-24 | patch | M4 #3726: integrate main d4454108, preserve the upstream typed-order extraction path alongside bounded range and odd/even selection; completed work remains outside Missing; estimates unchanged. |
 | 2026-10-23 | minor | M8, #3205 follow-up: phone-pattern redaction includes the +39 country code on labelled Italian geographic numbers with a slash; dates, protocol identifiers and whole-run guards remain. Estimates unchanged. |
 | 2026-10-23 | minor | M11: image downsampling measures physical resolution after page-local UserUnit scaling, including shared nested forms; synthetic measurement and optimization regressions. Estimates unchanged. |
 | 2026-10-23 | minor | M10: Word table cells use the grid columns they span, including cells after a merged cell; synthetic export regression and CLI reproduction. Estimates unchanged. |
