@@ -62,6 +62,58 @@ fn print_shortcuts_focus_paper_and_size_without_changing_settings() {
     assert_eq!(h.state().dialog, Some(Dialog::Print));
 }
 
+/// Native backends can pair an Alt access key with printable text in the same frame.
+#[test]
+fn print_shortcuts_do_not_type_into_the_page_range() {
+    use egui::{Key, Modifiers};
+    use egui_kittest::kittest::By;
+    let mut h = harness();
+    h.state_mut().execute("print.dialog");
+    h.state_mut().print_draft.which = pdfcraft_ui_egui::PrintWhich::Range;
+    h.state_mut().print_draft.range = "1-1".into();
+    h.run_steps(3);
+    for (key, text, target) in [(Key::S, "s", "Size"), (Key::P, "p", "US Letter")] {
+        h.get(By::new().role(Role::TextInput).value("1-1")).focus();
+        h.run_steps(2);
+        let before = h.state().print_draft.clone();
+        // Harness::event processes each queued event in a separate frame. RawInput keeps
+        // the native Key/Text pair together, before Size requests focus later in this frame.
+        h.input_mut().events.extend([
+            egui::Event::Key { key, physical_key: None, pressed: true, repeat: false, modifiers: Modifiers::ALT },
+            egui::Event::Text(text.into()),
+        ]);
+        h.run_steps(2);
+        assert_eq!(h.state().print_draft, before, "Alt+{text} must leave the range unchanged");
+        if key == Key::S {
+            assert!(h.get_by_label(target).is_focused());
+        } else {
+            assert!(h.get_by_value(target).is_focused());
+        }
+    }
+}
+
+/// Ordinary typing and AltGr text retain keyboard ownership in the range editor.
+#[test]
+fn print_shortcuts_preserve_nonshortcut_text() {
+    use egui::{Key, Modifiers};
+    use egui_kittest::kittest::By;
+    let mut h = harness();
+    h.state_mut().execute("print.dialog");
+    h.state_mut().print_draft.which = pdfcraft_ui_egui::PrintWhich::Range;
+    for (modifiers, text) in [(Modifiers::NONE, "s"), (Modifiers::ALT | Modifiers::CTRL, "ß")] {
+        h.state_mut().print_draft.range = "1-1".into();
+        h.run_steps(3);
+        h.get(By::new().role(Role::TextInput).value("1-1")).focus();
+        h.run_steps(2);
+        h.input_mut()
+            .events
+            .extend([egui::Event::Key { key: Key::S, physical_key: None, pressed: true, repeat: false, modifiers }, egui::Event::Text(text.into())]);
+        h.run_steps(2);
+        assert_eq!(h.state().print_draft.range, format!("1-1{text}"));
+        assert!(!h.get_by_label("Size").is_focused());
+    }
+}
+
 #[test]
 fn print_shortcuts_preserve_other_modifiers_and_open_popups() {
     use egui::{Key, Modifiers};
@@ -946,4 +998,32 @@ fn restored_paper_keeps_preview_and_saved_sheet_dimensions() {
     let size = pages[0].display_size(&printed);
     assert!((size.0 - a4.0).abs() < 0.01 && (size.1 - a4.1).abs() < 0.01, "saved sheet: {size:?}");
     std::fs::remove_file(out).unwrap();
+}
+
+/// #2707: a booklet decides two-sided itself, as Acrobat does (its Print dialog hides Two-sided
+/// while Booklet is chosen): the job flips on the short edge for both sides and prints
+/// one-sided for the front or back only, and the Two-sided choice is kept for other layouts.
+#[test]
+fn a_booklet_decides_two_sided_itself() {
+    use pdfcraft_engine::print::{BookletSubset, spool::Duplex};
+    let mut h = harness();
+    assert!(h.state_mut().execute("print.dialog"));
+    h.run_steps(3);
+    h.state_mut().print_draft.duplex = Some(Duplex::LongEdge);
+    h.run_steps(1);
+    assert!(h.query_by_label("Two-sided:").is_some());
+    h.get_by_label("Booklet").click();
+    h.run_steps(2);
+    assert!(h.query_by_label("Two-sided:").is_none(), "hidden while Booklet is chosen");
+    let d = &h.state().print_draft;
+    assert_eq!(d.duplex, Some(Duplex::LongEdge), "the Two-sided choice is kept");
+    assert_eq!(d.job("x").duplex, Some(Duplex::ShortEdge), "both sides flip on the short edge");
+    for subset in [BookletSubset::FrontOnly, BookletSubset::BackOnly] {
+        h.state_mut().print_draft.booklet_subset = subset;
+        assert_eq!(h.state().print_draft.job("x").duplex, Some(Duplex::Off), "{subset:?} is one pass of a manual duplex");
+    }
+    h.get_by_label("Size").click();
+    h.run_steps(2);
+    assert!(h.query_by_label("Two-sided:").is_some());
+    assert_eq!(h.state().print_draft.job("x").duplex, Some(Duplex::LongEdge), "back to the choice");
 }
