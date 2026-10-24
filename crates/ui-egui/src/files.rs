@@ -578,6 +578,11 @@ impl PdfCraftApp {
 
     /// Handle files picked asynchronously.
     pub(crate) fn process_file_requests(&mut self) {
+        // File requests import content; save pickers use their separate callback queue.
+        // Keep a mixed browser batch ordered while the user decides whether to close.
+        if self.close_request.is_some() {
+            return;
+        }
         let pending: Vec<_> = self.requests.lock().map(|mut q| std::mem::take(&mut *q)).unwrap_or_default();
         for FileRequest { purpose, target, files } in pending {
             if files.is_empty() {
@@ -1211,6 +1216,39 @@ mod browser_drop_tests {
             encoder.write_header().unwrap().write_image_data(&[40, 140, 220]).unwrap();
         }
         (app, png)
+    }
+
+    /// A completed mixed drop must wait for a save-changes decision, including cancellation.
+    #[test]
+    fn browser_drop_waits_for_a_save_prompt_before_images_and_pdf_open() {
+        for discard in [false, true] {
+            let (mut app, png) = fixture();
+            let original = app.views[0].id;
+            assert!(app.apply_edit(Edit::DeletePages { pages: vec![1] }));
+            let pdf = app.session.create_blank(100.0, 200.0, 1).unwrap();
+            let request = app.file_request(FilePurpose::AddImages { page: 0 }, vec![("photo.png".into(), png)]);
+            app.requests
+                .lock()
+                .unwrap()
+                .extend([request, FileRequest { purpose: FilePurpose::OpenDropped, target: None, files: vec![("other.pdf".into(), pdf.to_vec())] }]);
+            app.request_close_tab(0);
+            assert!(app.close_request.is_some());
+            app.process_file_requests();
+            assert!(app.session.get(original).unwrap().added().is_empty(), "no image behind the save prompt");
+            assert_eq!(app.views.len(), 1, "the PDF stays ordered after the image decision");
+            assert_eq!(app.requests.lock().unwrap().len(), 2);
+            app.resolve_close(&egui::Context::default(), if discard { Some(false) } else { None });
+            app.process_file_requests();
+            if discard {
+                assert!(app.session.get(original).is_none());
+                assert_eq!(app.views.len(), 1);
+                assert!(app.session.get(app.views[0].id).unwrap().added().is_empty());
+            } else {
+                assert_eq!(app.session.get(original).unwrap().added().len(), 1);
+                assert_eq!(app.views.len(), 2);
+            }
+            assert_eq!(app.session.get(app.views.last().unwrap().id).unwrap().name, "other.pdf");
+        }
     }
 
     /// A completed PDF read stays queued until the delayed image has been inserted or refused.
