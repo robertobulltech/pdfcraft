@@ -13,6 +13,8 @@ pub enum Backend {
     Portal,
 }
 
+/// Select the portal for Linux Flatpak markers; native packages and other platforms keep
+/// their existing spooler backend without querying CUPS during selection.
 pub fn backend() -> Backend {
     #[cfg(target_os = "linux")]
     {
@@ -24,6 +26,7 @@ pub fn backend() -> Backend {
     }
 }
 
+/// Pure backend selection from the platform and the two supported Flatpak indicators.
 #[cfg(any(target_os = "linux", test))]
 fn select_backend(linux: bool, flatpak_info: bool, flatpak_id: bool) -> Backend {
     if linux && (flatpak_info || flatpak_id) { Backend::Portal } else { Backend::Native }
@@ -174,6 +177,8 @@ pub(crate) fn printer_options_via_within(
     options
 }
 
+/// Submit a finished PDF through the selected backend without per-sheet progress callbacks.
+/// Portal acceptance reports handoff only; cancellation or submission failure returns an error.
 pub fn submit(pdf: &[u8], job: &Job) -> Result<String, crate::PrintError> {
     submit_with_progress(pdf, job, &mut |_, _| {})
 }
@@ -202,6 +207,8 @@ pub fn submit_with_progress(pdf: &[u8], job: &Job, progress: &mut dyn FnMut(usiz
     craft_print::submit_with_progress(pdf, job, progress).map_err(|e| crate::PrintError::Spool(e.to_string()))
 }
 
+/// Open native driver preferences, or direct Flatpak users to the host print dialog where
+/// printer settings are selected instead of exposing native driver controls.
 pub fn open_printer_preferences(printer: &str) -> Result<(), crate::PrintError> {
     if backend() == Backend::Portal {
         return Err(crate::PrintError::Spool("Choose printer settings in the system print dialog".into()));
@@ -290,6 +297,8 @@ pub(crate) fn localize(options: &mut [PrinterOption], ppd: &[u8], lang: &str) {
 #[cfg(test)]
 mod backend_tests {
     use super::*;
+    /// Either Flatpak marker selects the portal on Linux, while native Linux and other
+    /// platforms retain the native backend even when given sandbox-like indicators.
     #[test]
     fn sandbox_selection_keeps_native_packages_and_other_platforms() {
         assert_eq!(select_backend(true, false, false), Backend::Native);

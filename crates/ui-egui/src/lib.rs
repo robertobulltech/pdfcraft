@@ -1079,6 +1079,8 @@ pub enum OpenOutcome {
 }
 
 impl PdfCraftApp {
+    /// Create an empty application with default view preferences and no running print jobs.
+    /// Desktop startup restores persisted settings and supplies platform services afterward.
     pub fn new() -> Self {
         Self {
             session: Session::new(),

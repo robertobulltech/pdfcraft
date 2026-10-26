@@ -7547,6 +7547,8 @@ fn cropping_an_existing_image_clips_it_and_moves_with_it() {
     assert!(s.apply(id, Edit::EditPageImage { page: 0, index: 0, change: ImageEdit::Crop([10.0, 10.0, 10.0, 50.0]) }).is_err());
 }
 
+/// A captured print task remains usable on a worker after the source closes and produces
+/// the same selected, imposed pages as synchronous printing from the open document.
 #[test]
 fn print_task_keeps_a_permission_checked_snapshot_after_document_closes() {
     let (mut session, id) = session_with(4);

@@ -140,6 +140,8 @@ impl Default for Automation {
 }
 
 impl Automation {
+    /// Create an empty automation session with fresh caches and, on Linux, bounded portal-job
+    /// receipts. Portal submission remains synchronous until MCP opts into worker dispatch.
     pub fn new() -> Self {
         Self {
             session: Session::new(),

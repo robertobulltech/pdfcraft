@@ -107,6 +107,8 @@ pub struct PrintDraft {
 }
 
 impl Default for PrintDraft {
+    /// Initialize an all-pages, fit-to-paper draft with default handling and no portal or
+    /// driver overrides; opening Print fills in document and destination information.
     fn default() -> Self {
         PrintDraft {
             printers: Vec::new(),
@@ -352,6 +354,7 @@ fn default_printer(printers: &[spool::Printer]) -> Option<String> {
 
 #[cfg(all(target_os = "linux", not(target_arch = "wasm32")))]
 impl Drop for PrintJob {
+    /// Request cancellation when a portal job leaves the UI, including application shutdown.
     fn drop(&mut self) {
         if let Some(cancel) = &self.cancel {
             cancel.cancel();
@@ -381,6 +384,8 @@ impl Drop for WakeOnExit {
 }
 
 impl PdfCraftApp {
+    /// Open Print for the active document, refresh destinations and preserve valid draft
+    /// preferences while capturing its current page and selection, including portal availability.
     pub fn open_print(&mut self) {
         let Some((i, _)) = self.active_ids() else { return };
         let (printers, printers_loading) = match self.printer_source.clone() {
@@ -671,6 +676,8 @@ impl PdfCraftApp {
         false
     }
 
+    /// Display a print receipt or failure, using a backend-provided message when no native
+    /// printer name is available instead of implying physical printing has completed.
     fn report_print_job(&mut self, printer: &str, result: Result<String, String>) {
         match result {
             Ok(msg) if printer.is_empty() => self.notify(msg),
@@ -772,6 +779,8 @@ impl PdfCraftApp {
         true
     }
 
+    /// Compose a captured print task and run the host dialog on a worker, retaining a UI
+    /// cancellation token and repainting when it finishes. Return false if the worker cannot start.
     #[cfg(target_os = "linux")]
     fn send_to_portal(&mut self, title: String, task: pdfcraft_engine::PrintTask) -> bool {
         let (tx, rx) = std::sync::mpsc::channel();
@@ -1521,6 +1530,8 @@ mod tests {
 
     #[test]
     #[cfg(target_os = "linux")]
+    /// Cancelling portal progress clears the pending job without a success toast, and a later
+    /// accepted request reports handoff without claiming physical completion.
     fn portal_progress_cancels_without_a_success_notice_and_allows_the_next_job() {
         let mut app = PdfCraftApp::new();
         app.set_option("language", "en").unwrap();

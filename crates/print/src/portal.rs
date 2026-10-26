@@ -36,14 +36,17 @@ pub enum Outcome {
 #[derive(Clone, Default)]
 pub struct Cancellation(Arc<AtomicBool>);
 impl Cancellation {
+    /// Request cancellation for every worker sharing this token; an accepted handoff is not recalled.
     pub fn cancel(&self) {
         self.0.store(true, Ordering::Relaxed);
     }
+    /// Whether cancellation has been requested, without blocking the caller.
     pub fn is_cancelled(&self) -> bool {
         self.0.load(Ordering::Relaxed)
     }
 }
 
+/// Wrap a portal failure with service troubleshooting and the Save as PDF fallback.
 fn error(message: impl std::fmt::Display) -> PrintError {
     PrintError::Spool(format!(
         "System printing failed: {message}. Check that xdg-desktop-portal and your desktop's print portal are running, or use Save as PDF."
@@ -62,9 +65,13 @@ fn document(pdf: &[u8]) -> Result<File, PrintError> {
 /// Dependency injection boundary: tests and other callers can supply a transport without
 /// opening a real dialog, while exercising the same document handoff and ownership.
 pub trait Transport {
+    /// Submit the read-only PDF descriptor with a title, parent-window identifier and shared
+    /// cancellation token. Acceptance describes handoff rather than physical completion.
     fn print(&self, file: &File, title: &str, parent: &str, cancel: &Cancellation) -> Result<Outcome, PrintError>;
 }
 
+/// Hand an anonymous read-only PDF to an injected transport, or return cancellation before
+/// creating the descriptor when already cancelled. The descriptor is dropped on every outcome.
 pub fn submit_with(transport: &dyn Transport, pdf: &[u8], title: &str, parent: &str, cancel: &Cancellation) -> Result<Outcome, PrintError> {
     if cancel.is_cancelled() {
         return Ok(Outcome::Cancelled);
@@ -73,12 +80,15 @@ pub fn submit_with(transport: &dyn Transport, pdf: &[u8], title: &str, parent: &
     transport.print(&file, title, parent, cancel)
 }
 
+/// Submit a finished PDF through the desktop portal, blocking until acceptance, cancellation
+/// or failure; callers that must remain responsive run this on a worker.
 pub fn submit(pdf: &[u8], title: &str, parent: &str, cancel: &Cancellation) -> Result<Outcome, PrintError> {
     submit_with(&Desktop, pdf, title, parent, cancel)
 }
 
 struct Desktop;
 impl Transport for Desktop {
+    /// Connect to the session bus under a bounded wait, then run the two-phase portal handoff.
     fn print(&self, file: &File, title: &str, parent: &str, cancel: &Cancellation) -> Result<Outcome, PrintError> {
         future::block_on(async {
             let connection = bounded(
@@ -120,6 +130,8 @@ enum Operation<'a> {
     Print { file: &'a File, token: u32 },
 }
 
+/// Prepare the host dialog, validate its token and already-composed PDF settings, then submit
+/// the descriptor. Conflicting layout, order, scale or output format fails before handoff.
 async fn print_on(
     connection: &Connection,
     destination: &str,
@@ -169,6 +181,9 @@ async fn print_on(
     request_on(connection, destination, Operation::Print { file, token }, title, parent, cancel, timeout).await.map(|(outcome, _)| outcome)
 }
 
+/// Run one portal phase, subscribing before invocation so early responses are not lost.
+/// Validate the request handle and response, detect service loss, and close failed or cancelled
+/// requests with bounded cleanup. A cancelled wait yields a cancelled outcome.
 async fn request_on(
     connection: &Connection,
     destination: &str,
@@ -268,17 +283,20 @@ mod tests {
 
     struct Bus(Child, String);
     impl Bus {
+        /// Start an isolated session bus and capture its address for portal transport tests.
         fn new() -> Self {
             let mut child = Command::new("dbus-daemon").args(["--session", "--nofork", "--print-address=1"]).stdout(Stdio::piped()).spawn().unwrap();
             let mut address = String::new();
             BufReader::new(child.stdout.take().unwrap()).read_line(&mut address).unwrap();
             Self(child, address.trim().into())
         }
+        /// Open an independent client or mock-server connection to the isolated test bus.
         async fn connect(&self) -> Connection {
             zbus::connection::Builder::address(self.1.as_str()).unwrap().build().await.unwrap()
         }
     }
     impl Drop for Bus {
+        /// Stop and reap the private bus process when its test scope ends.
         fn drop(&mut self) {
             let _ = self.0.kill();
             let _ = self.0.wait();
@@ -310,17 +328,21 @@ mod tests {
     struct Request(Arc<AtomicBool>);
     #[zbus::interface(name = "org.freedesktop.portal.Request")]
     impl Request {
+        /// Record the client's request cleanup without opening a host dialog.
         fn close(&self) {
             self.0.store(true, Ordering::Relaxed);
         }
     }
     #[zbus::interface(name = "org.freedesktop.portal.Print")]
     impl Mock {
+        /// Advertise a portal version supporting PDF output-format hints.
         #[zbus(property, name = "version")]
         fn version(&self) -> u32 {
             4
         }
         #[allow(clippy::too_many_arguments)] // The portal D-Bus signature fixes these parameters.
+        /// Validate identity layout hints and emit an early PreparePrint response selected by
+        /// the test mode, including cancellation, malformed tokens and conflicting settings.
         async fn prepare_print(
             &self,
             parent: &str,
@@ -381,6 +403,8 @@ mod tests {
             Ok(path)
         }
 
+        /// Check the token and exact imposed PDF on a read-only descriptor, then simulate
+        /// responses, service loss, cancellation or handoff failure before the method returns.
         async fn print(
             &self,
             parent: &str,
@@ -465,6 +489,8 @@ mod tests {
         }
     }
 
+    /// Exercise the real D-Bus transport against an isolated mock with an imposed PDF.
+    /// Check descriptor ownership, forbidden handoffs and repeatability; return outcome and Close.
     async fn exercise(mode: Mode, timeout: Duration) -> (Result<Outcome, PrintError>, bool) {
         let bus = Bus::new();
         let server = bus.connect().await;
@@ -499,11 +525,14 @@ mod tests {
         (result, closed.load(Ordering::Relaxed))
     }
 
+    /// Successful portal responses accept the unchanged imposed PDF and allow another request.
     #[test]
     fn dbus_accepts_expected_imposed_pdf_and_consecutive_requests() {
         assert_eq!(future::block_on(exercise(Mode::Response(0), Duration::from_secs(5))).0.unwrap(), Outcome::Accepted);
     }
 
+    /// Both phases preserve cancellation, while malformed responses, failed handoffs, invalid
+    /// tokens, incompatible settings and service loss never become successful acceptance.
     #[test]
     fn dbus_cancel_failure_malformed_and_handoff_error() {
         future::block_on(async {
@@ -526,6 +555,7 @@ mod tests {
         });
     }
 
+    /// An unanswered request reaches its deadline and closes the pending host request.
     #[test]
     fn pending_request_times_out_and_closes() {
         let (result, closed) = future::block_on(exercise(Mode::Pending, Duration::from_millis(500)));
@@ -533,6 +563,7 @@ mod tests {
         assert!(closed);
     }
 
+    /// Shutdown cancellation closes the outstanding dialog and reports cancellation.
     #[test]
     fn shutdown_cancels_and_closes_pending_dialog() {
         let (result, closed) = future::block_on(exercise(Mode::Shutdown, Duration::from_secs(5)));
@@ -540,11 +571,13 @@ mod tests {
         assert!(closed);
     }
 
+    /// A malformed portal version fails interface validation before a document handoff.
     #[test]
     fn unsupported_or_malformed_version_is_an_error() {
         struct InvalidVersion;
         #[zbus::interface(name = "org.freedesktop.portal.Print")]
         impl InvalidVersion {
+            /// Deliberately violate the version property's type to exercise response validation.
             #[zbus(property, name = "version")]
             fn version(&self) -> &str {
                 "malformed"
@@ -565,6 +598,7 @@ mod tests {
         });
     }
 
+    /// A missing portal reports service guidance and offers Save as PDF as a fallback.
     #[test]
     fn absent_portal_is_actionable() {
         future::block_on(async {
@@ -578,10 +612,13 @@ mod tests {
         });
     }
 
+    /// Injected transport failures preserve the error and anonymous-file ownership, while
+    /// cancellation before submission bypasses the failing transport entirely.
     #[test]
     fn injected_handoff_error_cannot_become_success_and_leaves_no_named_pdf() {
         struct Failure;
         impl Transport for Failure {
+            /// Verify the descriptor has no filesystem link, then reject its handoff.
             fn print(&self, file: &File, _: &str, _: &str, _: &Cancellation) -> Result<Outcome, PrintError> {
                 assert_eq!(file.metadata().unwrap().nlink(), 0);
                 Err(error("document handoff failed"))

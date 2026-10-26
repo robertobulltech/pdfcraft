@@ -387,6 +387,8 @@ fn native_wayland(_: &eframe::CreationContext<'_>) -> bool {
     false
 }
 
+/// Build the desktop app factory, restoring preferences and wiring launch inputs, platform
+/// services and the native parent-window identifier used by the system print dialog.
 fn app_creator<'a>(
     launch: Launch,
     started: Rc<Cell<bool>>,

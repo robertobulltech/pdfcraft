@@ -8434,6 +8434,8 @@ fn a_root_less_write_output_is_atomic_too() {
     let _ = std::fs::remove_dir_all(&dir);
 }
 
+/// In an isolated Flatpak-like child, tools offer the system destination without CUPS,
+/// retain PDF saving and reject unsupported portal options before page processing.
 #[test]
 #[cfg(target_os = "linux")]
 fn flatpak_printing_through_tools_keeps_pdf_save() {
