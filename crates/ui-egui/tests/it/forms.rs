@@ -34,6 +34,7 @@ fn click_field(h: &mut Harness<'static, PdfCraftApp>, name: &str, widget: usize)
     click_at(h, p);
 }
 
+/// Click at a screen position, delivering hover, press and release in separate UI frames.
 fn click_at(h: &mut Harness<'static, PdfCraftApp>, p: egui::Pos2) {
     h.hover_at(p);
     h.run_steps(1);
@@ -90,6 +91,7 @@ fn multiline_paint(h: &Harness<'static, PdfCraftApp>, text: &str, at: usize) -> 
         .expect("the focused field paints its text")
 }
 
+/// Assert that a text position is within the painted clip and both stay inside the PDF widget.
 fn assert_multiline_visible(h: &Harness<'static, PdfCraftApp>, text: &str, at: usize, field: egui::Rect) {
     let (caret, clip) = multiline_paint(h, text, at);
     assert!(field.expand(1.0).contains_rect(caret), "caret must stay inside the PDF widget: {caret:?}, {field:?}");
@@ -97,6 +99,8 @@ fn assert_multiline_visible(h: &Harness<'static, PdfCraftApp>, text: &str, at: u
     assert!(clip.expand(1.0).contains_rect(caret), "caret must be visible: {caret:?}, clip {clip:?}");
 }
 
+/// Keyboard navigation and typing reveal the caret in an overflowing field, and Save preserves
+/// the complete edited value when the PDF is reopened.
 #[test]
 fn multiline_overflow_follows_keyboard_and_saves_edits() {
     let _gpu = crate::gpu();
@@ -146,6 +150,8 @@ fn multiline_overflow_follows_keyboard_and_saves_edits() {
     let _ = std::fs::remove_dir_all(dir);
 }
 
+/// Point and line wheel input reveal overflow without moving the caret, page or stored value;
+/// Home then reveals the unchanged caret, and Escape closes the editor without editing the field.
 #[test]
 fn multiline_overflow_wheel_reveals_text_without_moving_the_caret_or_page() {
     for (unit, distance) in [(egui::MouseWheelUnit::Point, 1000.0), (egui::MouseWheelUnit::Line, 40.0)] {
@@ -189,6 +195,8 @@ fn multiline_overflow_wheel_reveals_text_without_moving_the_caret_or_page() {
     }
 }
 
+/// Tab selects the whole overflowing value and reveals its primary caret; typing replaces the
+/// selection, while Escape cancels the draft and a fresh click reopens the field at the top.
 #[test]
 fn multiline_overflow_tab_keeps_select_all_and_reveals_the_caret() {
     let (mut h, text, rect, id) = overflowing_multiline();
