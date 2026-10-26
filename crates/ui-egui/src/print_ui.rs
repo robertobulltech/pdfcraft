@@ -929,6 +929,8 @@ fn combo<T: PartialEq + Copy>(ui: &mut egui::Ui, id: &str, value: &mut T, choice
 
 /// Access keys only move focus. Popups own their keyboard, and exact modifiers keep
 /// AltGr (Ctrl+Alt), shifted keys and document shortcuts out of this path.
+/// Returns whether an enabled, interactive UI consumed the requested Alt key press.
+/// Its immediately paired text event is consumed too, before the range editor can insert it.
 fn focus_shortcut(ui: &egui::Ui, key: egui::Key) -> bool {
     if !ui.is_enabled() || !ui.memory(|m| m.allows_interaction(ui.layer_id())) || egui::Popup::is_any_open(ui.ctx()) {
         return false;

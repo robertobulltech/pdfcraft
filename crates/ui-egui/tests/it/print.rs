@@ -9,6 +9,8 @@ fn harness() -> Harness<'static, PdfCraftApp> {
     harness_with_settings(None)
 }
 
+/// Open the synthetic form in an English UI, optionally restore saved settings, and settle
+/// the initial frames before tests open and interact with the Print dialog.
 fn harness_with_settings(settings: Option<String>) -> Harness<'static, PdfCraftApp> {
     let mut h = Harness::builder().with_size(egui::vec2(1400.0, 900.0)).build_eframe(move |_cc| {
         let mut app = PdfCraftApp::new();
@@ -23,11 +25,14 @@ fn harness_with_settings(settings: Option<String>) -> Harness<'static, PdfCraftA
     h
 }
 
+/// Send a key with its modifiers and advance two frames so focus and dialog changes settle.
 fn print_key(h: &mut Harness<'static, PdfCraftApp>, modifiers: egui::Modifiers, key: egui::Key) {
     h.key_press_modifiers(modifiers, key);
     h.run_steps(2);
 }
 
+/// Alt+P and Alt+S move focus without changing the print draft; Enter activates the focused
+/// control, and Tab/Shift+Tab continue through the scaling choices without closing Print.
 #[test]
 fn print_shortcuts_focus_paper_and_size_without_changing_settings() {
     use egui::{Key, Modifiers};
@@ -114,6 +119,8 @@ fn print_shortcuts_preserve_nonshortcut_text() {
     }
 }
 
+/// Only exact Alt combinations move focus, and an open popup retains keyboard ownership.
+/// Focusing Size from another handling mode leaves the draft intact until Enter activates it.
 #[test]
 fn print_shortcuts_preserve_other_modifiers_and_open_popups() {
     use egui::{Key, Modifiers};
