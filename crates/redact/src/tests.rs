@@ -3023,6 +3023,8 @@ fn redacted_clipping_title_keeps_an_empty_clip() {
     }
 }
 
+/// An empty clip is needed only when redaction removes the last clipping glyph: surviving
+/// clipping runs keep their mask, while painted runs and originally empty shows add none.
 #[test]
 fn clipping_text_keeps_surviving_runs_and_ignores_painted_runs() {
     for (runs, empty) in [
@@ -3047,6 +3049,8 @@ fn clipping_text_keeps_surviving_runs_and_ignores_painted_runs() {
     }
 }
 
+/// Clipping state follows a text object across content-stream pieces, including an inherited
+/// rendering mode, and resets before a later text object with a surviving mask.
 #[test]
 fn clipping_title_state_crosses_streams_but_resets_at_bt() {
     let mut doc = one_page(b"q 7 Tr BT /F1 10 Tf 10 100 Td (TI) Tj", "", vec![]);
@@ -3067,6 +3071,8 @@ fn clipping_title_state_crosses_streams_but_resets_at_bt() {
     assert!(c.contains("MASK"), "the second text object keeps its clip: {c}");
 }
 
+/// Hidden-text cleanup shares the redaction interpreter and must preserve an empty clip
+/// when it removes every glyph of a clipping title, keeping subsequent artwork masked.
 #[test]
 fn hidden_clipping_text_keeps_an_empty_clip() {
     let mut doc = one_page(b"q BT /F1 10 Tf 7 Tr 10 100 Td (TITLE) Tj ET 0 0 1 rg 0 0 300 300 re f Q", "", vec![]);

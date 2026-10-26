@@ -798,6 +798,12 @@ pub(crate) fn process(doc: &mut Document, scope: &mut Scope<'_>, streams: &[Vec<
 /// [`process`] from graphics state `gs`: a form XObject starts with its caller's, text state
 /// included (ISO 32000-2 §8.10.1), so text it shows without setting a font of its own is placed
 /// with the caller's font, size and spacing, as the renderer places it.
+///
+/// Graphics and text state carry across content-stream pieces. Within each `BT`/`ET` text
+/// object, clipping glyphs accumulate across all text shows. In apply mode, removing every
+/// clipping glyph emits an explicit empty clip after `ET`, in the original graphics-state
+/// scope, so later artwork stays masked. Surviving clipping text retains its glyph mask;
+/// text objects from which no clipping glyph was removed do not gain an empty clip.
 fn process_from(doc: &mut Document, scope: &mut Scope<'_>, streams: &[Vec<u8>], resources: &Dict, mut gs: Gs) -> Output {
     let mut out = Output::default();
     let fallback = Rc::new(Metrics::fallback());
