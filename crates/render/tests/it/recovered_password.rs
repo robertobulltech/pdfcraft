@@ -4,6 +4,8 @@ use std::sync::Arc;
 use pdfcraft_cos::{Algorithm, Document, NewEncryption, SaveOptions, write_full};
 use pdfcraft_render::{OpenError, check_pages, inspect};
 
+/// Build a deterministic one-page PDF encrypted with `algorithm`, user/owner passwords
+/// and the permissions from #3904, using a classic cross-reference table for recovery tests.
 fn fixture(algorithm: Algorithm) -> Vec<u8> {
     let objects = [
         "<< /Type /Catalog /Pages 2 0 R >>",
@@ -35,6 +37,8 @@ fn fixture(algorithm: Algorithm) -> Vec<u8> {
     write_full(&doc, &SaveOptions { object_streams: false, ..Default::default() }).unwrap()
 }
 
+/// Remove the fixture's final `startxref` section while retaining an EOF marker, forcing
+/// cross-reference reconstruction when the encrypted document is opened.
 fn without_startxref(mut bytes: Vec<u8>) -> Vec<u8> {
     let at = bytes.windows(b"startxref".len()).rposition(|s| s == b"startxref").unwrap();
     bytes.truncate(at);
@@ -42,6 +46,8 @@ fn without_startxref(mut bytes: Vec<u8>) -> Vec<u8> {
     bytes
 }
 
+/// Inspection and page checking preserve missing/wrong-password errors and accept the correct
+/// password for RC4/AES files with intact, missing, wrong or transport-prefixed xref offsets.
 #[test]
 fn recovered_encrypted_pdfs_request_password_and_accept_retry() {
     for algorithm in [Algorithm::Rc4_40, Algorithm::Rc4_128, Algorithm::Aes128, Algorithm::Aes256] {
@@ -68,6 +74,8 @@ fn recovered_encrypted_pdfs_request_password_and_accept_retry() {
     }
 }
 
+/// Recovery retains the unsupported-encryption classification for an unknown security handler
+/// instead of hiding it behind a generic invalid-PDF error.
 #[test]
 fn recovered_unsupported_encryption_is_not_reported_as_invalid_pdf() {
     let mut bytes = without_startxref(fixture(Algorithm::Rc4_128));
@@ -76,6 +84,7 @@ fn recovered_unsupported_encryption_is_not_reported_as_invalid_pdf() {
     assert!(matches!(inspect(Arc::new(bytes), None), Err(OpenError::Unsupported(_))));
 }
 
+/// A catalog without a recoverable page tree remains invalid rather than requesting a password.
 #[test]
 fn unrecoverable_pdf_remains_invalid() {
     let bytes = Arc::new(b"%PDF-1.7\n1 0 obj\n<< /Type /Catalog >>\nendobj\n%%EOF\n".to_vec());
