@@ -1047,6 +1047,7 @@ struct Carry {
 const MAX_PAGE_TEXT: usize = 16 << 20;
 
 impl Carry {
+    /// Start a page with the default graphics state and no pending path clip.
     fn new() -> Self {
         let ts = Ts {
             ctm: Matrix::IDENTITY,
@@ -1081,6 +1082,7 @@ type CachedFont = (Rc<Metrics>, Option<String>, Result<Option<f64>, String>);
 /// A `Do` met while interpreting: its operator index, XObject name and the state there.
 type Invocation = (usize, Vec<u8>, Ts);
 
+/// Interpret content operators, carrying graphics and clipping state across streams.
 fn interpret(
     doc: &Document,
     ops: &[Op],
@@ -3556,6 +3558,7 @@ pub(crate) fn translate_blocks(doc: &mut Document, page: usize, indexes: &[usize
 mod tests {
     use super::*;
 
+    /// Build a simple text block for the layout and identity tests.
     fn block(text: &str, rect: [f64; 4]) -> TextBlock {
         TextBlock {
             text: text.into(),

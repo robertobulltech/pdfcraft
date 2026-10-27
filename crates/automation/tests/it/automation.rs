@@ -9176,6 +9176,7 @@ fn page_render_draws_stamps_without_an_appearance() {
     assert!(grey > 100 && grey == custom.len(), "an unknown name is a grey placeholder: {grey} of {}", custom.len());
 }
 
+/// Paragraph tools expose clipping before edits and after saving and reopening the document.
 #[test]
 fn path_clipped_paragraph_warns_through_tools_before_edit_and_after_reopen() {
     use pdfcraft_cos::{Dict, Document, Object, Stream, write_incremental};

@@ -6499,6 +6499,7 @@ fn a_paragraph_selected_by_its_frame_deletes_with_one_key() {
     }
 }
 
+/// The editor shows the clipping warning before typing and keeps it visible during editing.
 #[test]
 fn path_clipped_paragraph_warns_before_typing_and_apply() {
     let warning =

@@ -7458,6 +7458,7 @@ fn a_run_of_spaces_in_a_subset_without_a_space_glyph_keeps_its_width() {
     assert_eq!(content.matches("[-330] TJ").count(), 5, "{content}");
 }
 
+/// A clipped paragraph reports its warning before and after growth, movement, and reopening.
 #[test]
 fn path_clipped_paragraphs_report_the_clip_before_growth_or_movement() {
     let mut doc = text_page(
@@ -7477,6 +7478,7 @@ fn path_clipped_paragraphs_report_the_clip_before_growth_or_movement() {
     assert!(text::text_blocks(&reopen(&doc), 0).unwrap().iter().any(|b| b.path_clipped));
 }
 
+/// Path endings activate pending clips and graphics-state restoration removes them.
 #[test]
 fn path_clip_tracking_follows_path_endings_and_graphics_state() {
     let show = "BT /F1 10 Tf 72 700 Td (Text) Tj ET";
@@ -7497,6 +7499,7 @@ fn path_clip_tracking_follows_path_endings_and_graphics_state() {
     assert!(text::text_blocks(&doc, 0).unwrap()[0].path_clipped);
 }
 
+/// Clip warnings survive content stream boundaries and merged ActualText runs.
 #[test]
 fn path_clip_warning_survives_stream_boundaries_and_actual_text() {
     let mut doc = text_page("");
