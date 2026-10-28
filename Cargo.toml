@@ -20,7 +20,7 @@ craft-quit = { git = "https://github.com/storytold/craft-libs", version = "0.1.0
 craft-menu = { git = "https://github.com/storytold/craft-libs", version = "0.1.0", rev = "e11f9d9aebea5f6b8e74643c1ea1ed172ba5f545" }
 craft-keymap = { git = "https://github.com/storytold/craft-libs", version = "0.1.0", rev = "e11f9d9aebea5f6b8e74643c1ea1ed172ba5f545", default-features = false }
 # Shared system spooler; document composition remains in pdfcraft-print.
-craft-print = { git = "https://github.com/storytold/craft-libs", version = "0.1.0", rev = "4a78bda97774594e2ff86cc211ce52d6955eb28f" }
+craft-print = { git = "https://github.com/storytold/craft-libs", version = "0.1.0", rev = "fff3fd27fea483e297f08cb181e95c11bb1ecc68" }
 # Whether a path stored in a document may be opened (GoToR link targets).
 craft-docpath = { version = "0.1.0", git = "https://github.com/storytold/craft-libs", rev = "e11f9d9aebea5f6b8e74643c1ea1ed172ba5f545" }
 craft-update = { git = "https://github.com/storytold/craft-libs", version = "=0.1.0", rev = "e11f9d9aebea5f6b8e74643c1ea1ed172ba5f545", features = ["egui"] }
