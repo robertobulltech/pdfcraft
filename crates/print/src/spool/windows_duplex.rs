@@ -6,8 +6,10 @@ use std::borrow::Cow;
 use super::{Duplex, Job};
 use crate::PrintError;
 
-/// Keep explicit choices (including booklet and cut-and-stack choices), otherwise read
-/// the selected queue's current settings once, immediately before submission.
+/// Preserve an explicit duplex choice by borrowing `job` without calling `read`.
+/// Otherwise call `read` once with the selected printer (or `None` for the system default),
+/// returning an owned copy with the resolved printer and duplex value. Propagate read errors;
+/// the original job remains unchanged even when the driver has no duplex setting.
 fn resolve<'a>(job: &'a Job, read: impl FnOnce(Option<&str>) -> Result<(String, Option<Duplex>), PrintError>) -> Result<Cow<'a, Job>, PrintError> {
     if job.duplex.is_some() {
         return Ok(Cow::Borrowed(job));
@@ -21,7 +23,8 @@ fn resolve<'a>(job: &'a Job, read: impl FnOnce(Option<&str>) -> Result<(String, 
 
 /// DEVMODEW's public dmFields (offset 72) marks dmDuplex (offset 94) as valid with
 /// DM_DUPLEX. Values are DMDUP_SIMPLEX, DMDUP_VERTICAL and DMDUP_HORIZONTAL, respectively.
-/// Layout and meanings: https://learn.microsoft.com/windows/win32/api/wingdi/ns-wingdi-devmodew
+/// Return `None` when DM_DUPLEX is absent, or a spool error for a malformed field or an
+/// unrecognized declared value. Layout: <https://learn.microsoft.com/windows/win32/api/wingdi/ns-wingdi-devmodew>.
 fn duplex(settings: &craft_print::rgb::DevMode) -> Result<Option<Duplex>, PrintError> {
     let bytes = settings.as_bytes();
     let invalid = || PrintError::Spool("the printer driver returned an invalid two-sided default; check its printing preferences".into());
@@ -38,6 +41,10 @@ fn duplex(settings: &craft_print::rgb::DevMode) -> Result<Option<Duplex>, PrintE
 }
 
 #[cfg(windows)]
+/// Resolve an unspecified duplex setting from the selected Windows printer immediately
+/// before submission. An unnamed printer is resolved to the system default and pinned to
+/// the returned job. Explicit choices bypass the driver lookup. Returns a spool error if
+/// there is no default printer, its settings cannot be read, or its duplex value is invalid.
 pub(super) fn job(job: &Job) -> Result<Cow<'_, Job>, PrintError> {
     resolve(job, |selected| {
         let failed = |e| PrintError::Spool(format!("could not read the printer's two-sided default: {e}"));

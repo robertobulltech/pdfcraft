@@ -146,6 +146,15 @@ pub(crate) fn printer_options_via_within(
     options
 }
 
+/// Submit a print-ready PDF to the selected system printer and return the spooler's response.
+/// On Windows, an unspecified duplex setting is resolved from the selected printer's current
+/// settings before submission; explicit duplex choices are kept. A driver without a duplex
+/// field leaves it unspecified. Other platforms delegate the job to their spooler unchanged.
+///
+/// # Errors
+///
+/// Returns a spool error if Windows cannot resolve the default printer or read a valid duplex
+/// setting, or if the underlying spooler cannot submit the job.
 pub fn submit(pdf: &[u8], job: &Job) -> Result<String, crate::PrintError> {
     #[cfg(windows)]
     let resolved = windows_duplex::job(job)?;
@@ -156,6 +165,10 @@ pub fn submit(pdf: &[u8], job: &Job) -> Result<String, crate::PrintError> {
 
 /// [`submit`], told `(sent, sheets)` as each sheet reaches the spooler (Windows; CUPS takes the
 /// whole PDF at once and reports nothing).
+///
+/// # Errors
+///
+/// Returns the same printer-default resolution and submission errors as [`submit`].
 pub fn submit_with_progress(pdf: &[u8], job: &Job, progress: &mut dyn FnMut(usize, usize)) -> Result<String, crate::PrintError> {
     #[cfg(windows)]
     let resolved = windows_duplex::job(job)?;
