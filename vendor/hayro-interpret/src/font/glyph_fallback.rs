@@ -1,4 +1,4 @@
-//! PdfCraft patch (35): bounded, display-only fallback for missing simple-font glyphs.
+//! PdfCraft patch (71): bounded, display-only fallback for missing simple-font glyphs.
 use super::blob::OpenTypeFontBlob;
 use super::generated::glyph_names;
 use super::{FontData, FontQuery, StandardFont, stretch_glyph, unicode_from_name};
@@ -58,9 +58,11 @@ impl SimpleGlyphFallback {
     /// Encoding `name` takes precedence over `unicode`; multi-scalar text gets a box rather than
     /// a guessed first character. Invisible or undecodable input returns `None`.
     ///
-    /// `width` is the advance already selected by the caller, including an explicit zero. Fit a
-    /// usable alternate outline to it when possible; without it, retain the alternate's natural
-    /// advance, or 600 units for a missing box. Cache at most 256 codes and eight parsed faces.
+    /// `width` is the advance already selected by the caller, including an explicit zero.
+    /// Narrow a usable alternate outline to a smaller width, but never widen its design;
+    /// the caller still uses the full PDF advance for text placement. Without a selected
+    /// width, use the alternate's natural advance, or 600 units for a missing box.
+    /// Cache at most 256 codes and eight parsed faces.
     /// Reject empty, oversized or non-finite alternate outlines; keep a finite missing box instead.
     /// The cached natural advance is separate from the caller's explicit PDF width.
     pub(super) fn map_code(
@@ -212,12 +214,13 @@ fn decode_string(s: &str) -> Option<Decoded> {
     })
 }
 
-/// Scale an outline horizontally only when both advances are finite and the source advance
-/// is positive. Otherwise return it unchanged; a finite target zero is a valid fit.
+/// Narrow an outline to a smaller target advance, never widen it to an oversized PDF width.
+/// Both advances must be finite and the source positive; otherwise leave the path unchanged.
+/// A finite target zero remains a valid fit. Text placement keeps the caller's full advance.
 fn fit_width(path: BezPath, width: Option<f32>, actual: Option<f32>) -> BezPath {
     match width.zip(actual) {
         Some((width, actual)) if width.is_finite() && actual.is_finite() && actual > 0.0 => {
-            stretch_glyph(path, width, actual)
+            stretch_glyph(path, width.min(actual), actual)
         }
         _ => path,
     }
@@ -235,8 +238,9 @@ fn invisible(c: char) -> bool {
         '\u{1bca0}'..='\u{1bca3}' | '\u{1d173}'..='\u{1d17a}' | '\u{e0000}'..='\u{e0fff}')
 }
 
-/// Build the contributor-original missing-glyph box, fitting only a positive supplied width.
-/// Without such a width, keep the 600-unit design space; this path does not select text advance.
+/// Build the contributor-original missing-glyph box, narrowing only to a positive supplied
+/// width below its 600-unit design advance. Otherwise keep its original shape; this path
+/// does not select the text advance.
 fn missing_box(width: Option<f32>) -> BezPath {
     let mut path = BezPath::new();
     path.move_to((70.0, 0.0));

@@ -82,7 +82,7 @@ fn main() {
                 let name = pick_standard_font(&f.pick_standard_font());
                 load_asset(name).or_else(|| Some(f.pick_standard_font().get_font_data()))
             }
-            // PdfCraft patch (35): this example supplies no per-glyph fallback.
+            // PdfCraft patch (71): this example supplies no per-glyph fallback.
             FontQuery::MissingGlyph { .. } => None,
         }),
         ..Default::default()

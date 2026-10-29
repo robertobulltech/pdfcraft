@@ -298,6 +298,59 @@ fn standard_fonts_without_widths_use_alternate_advances_and_keep_text_placement(
     }
 }
 
+/// Oversized PDF advances must not widen narrow Greek fallback outlines into blocks.
+/// Narrow and zero advances still fit the outline; PDF advances, following-glyph
+/// positions, text and the baseline remain independent of that visual width limit.
+#[test]
+fn greek_fallback_widths_never_widen_outlines_or_change_pdf_placement() {
+    let names = [(192, "Iota"), (193, "iota"), (194, "iotatonos")];
+    for (name, face) in [("Arial", pdfcraft_fonts::INTER_REGULAR), ("Arial,Bold", pdfcraft_fonts::INTER_SEMIBOLD)] {
+        for subtype in ["TrueType", "Type1"] {
+            for (code, glyph_name) in names {
+                let mut font = encoded_font(name, &[(code, glyph_name)]);
+                let dict = font.as_dict_mut().unwrap();
+                dict.set("Subtype", subtype);
+                dict.remove(b"Widths");
+                let (s, _) = settings(Some(face));
+                let natural = probe(glyph_pdf(font.clone(), &[code as u8, code as u8]), s);
+                assert_eq!(natural.len(), 2);
+                let original = &natural[0];
+                let original_path = original.path.as_ref().unwrap();
+                let original_bounds = original_path.bounding_box();
+                let advance = original.advance.unwrap();
+                assert!(advance > 100.0 && advance < 600.0, "{name} {glyph_name}: {advance}");
+                assert!(original_bounds.width() > 0.0);
+                for width in [0, 100, 600, 1200] {
+                    font.as_dict_mut().unwrap().set("Widths", vec![Object::Integer(width); 256]);
+                    let (s, calls) = settings(Some(face));
+                    let glyphs = probe(glyph_pdf(font.clone(), &[code as u8, code as u8]), s);
+                    assert_eq!(glyphs.len(), 2);
+                    assert_eq!(calls.load(Ordering::Relaxed), 1);
+                    for glyph in &glyphs {
+                        assert_eq!(glyph.text, original.text);
+                        assert!(!glyph.embedded);
+                        assert_eq!(glyph.advance, Some(width as f32));
+                        let path = glyph.path.as_ref().unwrap();
+                        if width >= 600 {
+                            assert_eq!(path, original_path, "{name} {subtype} {glyph_name}: oversized width {width}");
+                        } else {
+                            let bounds = path.bounding_box();
+                            let ratio = f64::from(width as f32 / advance);
+                            assert!((bounds.width() - original_bounds.width() * ratio).abs() < 0.001);
+                            assert!((bounds.y0 - original_bounds.y0).abs() < 0.001);
+                            assert!((bounds.y1 - original_bounds.y1).abs() < 0.001);
+                        }
+                    }
+                    assert_eq!(glyphs[0].matrix, original.matrix);
+                    let mut expected = original.matrix;
+                    expected[4] += width as f64 * 0.02;
+                    assert_eq!(glyphs[1].matrix, expected, "PDF advance must still place the next glyph");
+                }
+            }
+        }
+    }
+}
+
 /// Keep explicit widths, including zero, ahead of alternate metrics; array holes
 /// must use MissingWidth, including an explicit zero.
 #[test]
@@ -410,7 +463,7 @@ fn pdf_advances_spacing_transforms_and_baselines_are_independent_of_fallback() {
     assert_eq!(before[3].path, after[3].path);
 }
 
-/// Keep distinct explicit widths and fitted paths for two codes naming one character,
+/// Keep distinct narrow PDF widths and fitted paths for two codes naming one character,
 /// with one alternate resolution per repeated code.
 #[test]
 fn repeated_aliases_keep_distinct_widths_and_cache_one_resolution_per_code() {
@@ -418,17 +471,17 @@ fn repeated_aliases_keep_distinct_widths_and_cache_one_resolution_per_code() {
     let dict = font.as_dict_mut().unwrap();
     dict.set("FirstChar", 65);
     dict.set("LastChar", 67);
-    dict.set("Widths", vec![300.into(), 900.into(), 600.into()]);
+    dict.set("Widths", vec![150.into(), 300.into(), 600.into()]);
     let bytes = glyph_pdf(font, &[65, 66, 67, 65, 66]);
     let (s, calls) = settings(Some(pdfcraft_fonts::INTER_REGULAR));
     let g = probe(bytes, s);
     assert_eq!(calls.load(Ordering::Relaxed), 2);
-    assert_eq!(g.iter().map(|g| g.advance).collect::<Vec<_>>(), vec![Some(300.0), Some(900.0), Some(600.0), Some(300.0), Some(900.0)]);
+    assert_eq!(g.iter().map(|g| g.advance).collect::<Vec<_>>(), vec![Some(150.0), Some(300.0), Some(600.0), Some(150.0), Some(300.0)]);
     assert_ne!(g[0].glyph, g[1].glyph, "different code/width must not share an outline cache entry");
     assert_eq!(g[0].path, g[3].path);
     assert_eq!(g[1].path, g[4].path);
     let w = |i: usize| g[i].path.as_ref().unwrap().bounding_box().width();
-    assert!((w(1) - 3.0 * w(0)).abs() < 0.01, "{} {}", w(0), w(1));
+    assert!((w(1) - 2.0 * w(0)).abs() < 0.01, "{} {}", w(0), w(1));
 }
 
 /// Absent, corrupt and non-covering alternates yield the same box; covering Inter
