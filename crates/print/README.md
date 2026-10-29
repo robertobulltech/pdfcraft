@@ -57,8 +57,9 @@ setting immediately before submission and carries that binding explicitly into t
 (#5130). This also applies to `doc_print` with `duplex: "printer"`; its omitted-argument
 default remains `off`. Explicit Off/Long Edge/Short Edge choices, booklet binding and
 single-sided cut-and-stack bypass this lookup. Drivers without `DM_DUPLEX` retain the
-unspecified setting. A failed settings read or an invalid declared duplex value returns
-an error before submission. CUPS still leaves the choice to the queue. The Windows backend
+unspecified setting. A failed lookup, settings read or invalid declared duplex value is
+logged and falls back to leaving duplex unspecified, so the driver can still choose its default.
+If the queue was resolved before the settings failure, the job remains pinned to that queue. CUPS still leaves the choice to the queue. The Windows backend
 selects `JobDuplexAllDocumentsContiguously`, falling back to `DocumentDuplex` when
 the driver exposes only document-level duplex, and validates the retained binding before submission
 ([craft-libs #411](https://github.com/storytold/craft-libs/pull/411)).

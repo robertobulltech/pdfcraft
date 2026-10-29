@@ -1,5 +1,7 @@
 # PdfCraft roadmap
 
+> **Last reviewed:** 2026-10-29 | **Last updated:** 2026-10-29 | **Change:** patch (M10, #5130 review: log failed Windows default lookups and defer to the driver; estimates unchanged)
+
 > **Last reviewed:** 2026-10-28 | **Last updated:** 2026-10-28 | **Change:** patch (M10, #5130: Windows resolves Printer default from native duplex settings before submission; estimates unchanged)
 
 **Stage: alpha** · next: beta, ~25% (ready for real work 50% → 75%) and ~400–700 h away
@@ -201,6 +203,8 @@ Ranked; detail and the full milestone table in [docs/roadmap.md](docs/roadmap.md
 | 8 | 1.0 polish: performance, right-to-left, missing languages, keyboard-only (M14) | 55–95 |
 
 ## Progress log
+
+- **2026-10-29 (M10, #5130 review):** Failed Windows duplex-default lookups now log a fallback and allow submission with duplex unspecified; successful queue resolution is retained. Automation and parity wording aligned. Hardware duplex qualification remains open. Estimates unchanged.
 
 - **2026-10-28 (M10, #5130):** Windows Printer default carries the current native driver duplex setting explicitly into both submission paths; explicit binding choices are retained. Synthetic regressions and a read-only installed-driver check cover resolution; physical output remains unverified. Estimates unchanged.
 - **2026-10-27 (M10, OCR models):** Model staging downloads and verifies the ONNX pair after the upstream RTEN URL brownout; runtime discovery prefers complete ONNX pairs per directory, retains complete RTEN fallback and preserves directory precedence.

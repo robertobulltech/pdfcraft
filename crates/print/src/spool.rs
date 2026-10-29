@@ -149,15 +149,15 @@ pub(crate) fn printer_options_via_within(
 /// Submit a print-ready PDF to the selected system printer and return the spooler's response.
 /// On Windows, an unspecified duplex setting is resolved from the selected printer's current
 /// settings before submission; explicit duplex choices are kept. A driver without a duplex
-/// field leaves it unspecified. Other platforms delegate the job to their spooler unchanged.
+/// field leaves it unspecified. Failed default lookups are logged and leave duplex unspecified.
+/// Other platforms delegate the job to their spooler unchanged.
 ///
 /// # Errors
 ///
-/// Returns a spool error if Windows cannot resolve the default printer or read a valid duplex
-/// setting, or if the underlying spooler cannot submit the job.
+/// Returns a spool error if the underlying spooler cannot submit the job.
 pub fn submit(pdf: &[u8], job: &Job) -> Result<String, crate::PrintError> {
     #[cfg(windows)]
-    let resolved = windows_duplex::job(job)?;
+    let resolved = windows_duplex::job(job);
     #[cfg(windows)]
     let job = resolved.as_ref();
     craft_print::submit(pdf, job).map_err(|e| crate::PrintError::Spool(e.to_string()))
@@ -168,10 +168,10 @@ pub fn submit(pdf: &[u8], job: &Job) -> Result<String, crate::PrintError> {
 ///
 /// # Errors
 ///
-/// Returns the same printer-default resolution and submission errors as [`submit`].
+/// Returns the same submission errors as [`submit`].
 pub fn submit_with_progress(pdf: &[u8], job: &Job, progress: &mut dyn FnMut(usize, usize)) -> Result<String, crate::PrintError> {
     #[cfg(windows)]
-    let resolved = windows_duplex::job(job)?;
+    let resolved = windows_duplex::job(job);
     #[cfg(windows)]
     let job = resolved.as_ref();
     craft_print::submit_with_progress(pdf, job, progress).map_err(|e| crate::PrintError::Spool(e.to_string()))

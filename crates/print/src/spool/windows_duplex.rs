@@ -8,17 +8,35 @@ use crate::PrintError;
 
 /// Preserve an explicit duplex choice by borrowing `job` without calling `read`.
 /// Otherwise call `read` once with the selected printer (or `None` for the system default),
-/// returning an owned copy with the resolved printer and duplex value. Propagate read errors;
+/// returning an owned copy with the resolved printer and duplex value. Log lookup failures
+/// and leave duplex unspecified so the spooler can use its previous default behavior;
 /// the original job remains unchanged even when the driver has no duplex setting.
-fn resolve<'a>(job: &'a Job, read: impl FnOnce(Option<&str>) -> Result<(String, Option<Duplex>), PrintError>) -> Result<Cow<'a, Job>, PrintError> {
+fn resolve<'a>(job: &'a Job, read: impl FnOnce(Option<&str>) -> Result<(String, Option<Duplex>), PrintError>) -> Cow<'a, Job> {
     if job.duplex.is_some() {
-        return Ok(Cow::Borrowed(job));
+        return Cow::Borrowed(job);
     }
-    let (printer, duplex) = read(job.printer.as_deref())?;
+    let (printer, duplex) = match read(job.printer.as_deref()) {
+        Ok(settings) => settings,
+        Err(error) => {
+            driver_default(Err(error));
+            return Cow::Borrowed(job);
+        }
+    };
     let mut resolved = job.clone();
     resolved.printer = Some(printer);
     resolved.duplex = duplex;
-    Ok(Cow::Owned(resolved))
+    Cow::Owned(resolved)
+}
+
+/// A driver default is best-effort: record the fallback and let the driver choose.
+fn driver_default(result: Result<Option<Duplex>, PrintError>) -> Option<Duplex> {
+    match result {
+        Ok(value) => value,
+        Err(error) => {
+            log::warn!("could not resolve the printer's two-sided default; leaving duplex unspecified: {error}");
+            None
+        }
+    }
 }
 
 /// DEVMODEW's public dmFields (offset 72) marks dmDuplex (offset 94) as valid with
@@ -43,9 +61,9 @@ fn duplex(settings: &craft_print::rgb::DevMode) -> Result<Option<Duplex>, PrintE
 #[cfg(windows)]
 /// Resolve an unspecified duplex setting from the selected Windows printer immediately
 /// before submission. An unnamed printer is resolved to the system default and pinned to
-/// the returned job. Explicit choices bypass the driver lookup. Returns a spool error if
-/// there is no default printer, its settings cannot be read, or its duplex value is invalid.
-pub(super) fn job(job: &Job) -> Result<Cow<'_, Job>, PrintError> {
+/// the returned job. Explicit choices bypass the driver lookup. Lookup failures are logged
+/// and leave duplex unspecified; a settings failure retains the resolved queue.
+pub(super) fn job(job: &Job) -> Cow<'_, Job> {
     resolve(job, |selected| {
         let failed = |e| PrintError::Spool(format!("could not read the printer's two-sided default: {e}"));
         let printer = match selected {
@@ -54,8 +72,8 @@ pub(super) fn job(job: &Job) -> Result<Cow<'_, Job>, PrintError> {
                 .map_err(failed)?
                 .ok_or_else(|| PrintError::Spool("there is no default printer; choose a printer".into()))?,
         };
-        let settings = craft_print::rgb::default_settings(&printer).map_err(failed)?;
-        Ok((printer, duplex(&settings)?))
+        let value = craft_print::rgb::default_settings(&printer).map_err(failed).and_then(|settings| duplex(&settings));
+        Ok((printer, driver_default(value)))
     })
 }
 
@@ -86,8 +104,7 @@ mod tests {
             let resolved = resolve(&original, |selected| {
                 assert_eq!(selected, Some("Office"));
                 Ok(("Office".into(), duplex(&settings(0x1000, value))?))
-            })
-            .unwrap();
+            });
             assert_eq!(resolved.duplex, Some(expected));
             assert_eq!(resolved.printer.as_deref(), Some("Office"));
             assert_eq!(resolved.copies, 3);
@@ -104,7 +121,7 @@ mod tests {
     fn explicit_choices_do_not_read_or_change_the_printer_default() {
         for choice in [Duplex::Off, Duplex::LongEdge, Duplex::ShortEdge] {
             let original = Job { duplex: Some(choice), ..Job::default() };
-            let resolved = resolve(&original, |_| panic!("explicit choice must skip driver settings")).unwrap();
+            let resolved = resolve(&original, |_| panic!("explicit choice must skip driver settings"));
             assert!(matches!(resolved, Cow::Borrowed(_)));
             assert_eq!(resolved.duplex, Some(choice));
         }
@@ -116,8 +133,7 @@ mod tests {
         let resolved = resolve(&original, |selected| {
             assert_eq!(selected, None);
             Ok(("System default".into(), Some(Duplex::ShortEdge)))
-        })
-        .unwrap();
+        });
         assert_eq!(resolved.printer.as_deref(), Some("System default"));
         assert_eq!(resolved.duplex, Some(Duplex::ShortEdge));
     }
@@ -129,15 +145,29 @@ mod tests {
             assert!(duplex(&settings(0x1000, value)).is_err());
         }
         let original = Job::default();
-        let resolved = resolve(&original, |_| Ok(("Simplex".into(), None))).unwrap();
+        let resolved = resolve(&original, |_| Ok(("Simplex".into(), None)));
         assert_eq!(resolved.duplex, None);
     }
 
     #[test]
-    fn a_settings_read_failure_is_reported_before_submission() {
+    fn a_queue_lookup_failure_preserves_the_original_job() {
         let original = Job::default();
-        let result = resolve(&original, |_| Err(PrintError::Spool("driver unavailable".into())));
-        assert!(matches!(result, Err(PrintError::Spool(message)) if message == "driver unavailable"));
+        let resolved = resolve(&original, |_| Err(PrintError::Spool("driver unavailable".into())));
+        assert!(matches!(resolved, Cow::Borrowed(_)));
+        assert_eq!(resolved.duplex, None);
+        assert_eq!(resolved.printer, original.printer);
+    }
+
+    #[test]
+    fn failed_or_invalid_settings_fall_back_and_keep_the_resolved_queue() {
+        for value in [Err(PrintError::Spool("driver unavailable".into())), duplex(&settings(0x1000, 99))] {
+            let original = Job { copies: 3, ..Job::default() };
+            let resolved = resolve(&original, |_| Ok(("Resolved queue".into(), driver_default(value))));
+            assert_eq!(resolved.duplex, None);
+            assert_eq!(resolved.printer.as_deref(), Some("Resolved queue"));
+            assert_eq!(resolved.copies, 3);
+            assert_eq!(original.printer, None);
+        }
     }
 
     /// Reads settings only: never submits a job or changes the printer's preferences.
@@ -148,7 +178,7 @@ mod tests {
         let printer = std::env::var("PDFCRAFT_PRINT_TEST_PRINTER").unwrap();
         let original = Job { printer: Some(printer.clone()), ..Job::default() };
         let expected = duplex(&craft_print::rgb::default_settings(&printer).unwrap()).unwrap();
-        let resolved = job(&original).unwrap();
+        let resolved = job(&original);
         assert_eq!(resolved.printer.as_deref(), Some(printer.as_str()));
         assert_eq!(resolved.duplex, expected);
         eprintln!("native Windows default: {expected:?}; resolved job: {:?}", resolved.duplex);
