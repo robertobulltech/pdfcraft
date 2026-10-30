@@ -170,6 +170,7 @@ impl<'a> Device<'a> for Probe {
     fn set_blend_mode(&mut self, _: BlendMode) {}
     fn draw_path(&mut self, _: &BezPath, _: Affine, _: &Paint<'a>, _: &PathDrawMode) {}
     fn push_clip_path(&mut self, _: &ClipPath) {}
+    /// Ignores transparency groups in this geometry-only probe.
     fn push_transparency_group(&mut self, _: f32, _: Option<SoftMask<'a>>, _: BlendMode) {}
     /// Record semantic text, outline/id, advance, embedding status and the combined page
     /// and glyph transform at draw time, preserving interpreter order for comparisons.
@@ -185,8 +186,11 @@ impl<'a> Device<'a> for Probe {
         };
         self.0.push(DrawnGlyph { text, path, glyph, advance, matrix: (transform * glyph_transform).as_coeffs(), embedded });
     }
+    /// Ignores images in this geometry-only probe.
     fn draw_image(&mut self, _: Image<'a, '_>, _: Affine) {}
+    /// Ignores clip closure in this geometry-only probe.
     fn pop_clip_path(&mut self) {}
+    /// Ignores group closure in this geometry-only probe.
     fn pop_transparency_group(&mut self) {}
 }
 

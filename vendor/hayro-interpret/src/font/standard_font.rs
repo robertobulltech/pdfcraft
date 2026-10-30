@@ -669,18 +669,22 @@ impl StandardKind {
         self.code_to_ps_name(code).and_then(glyph_name_to_unicode)
     }
 
+    /// Reports whether the selected standard font is italic.
     pub(crate) fn is_italic(&self) -> bool {
         self.base_font.is_italic()
     }
 
+    /// Reports whether the selected standard font is bold.
     pub(crate) fn is_bold(&self) -> bool {
         self.base_font.is_bold()
     }
 
+    /// Reports whether the selected standard font has serifs.
     pub(crate) fn is_serif(&self) -> bool {
         self.base_font.is_serif()
     }
 
+    /// Reports whether the selected standard font is monospaced.
     pub(crate) fn is_monospace(&self) -> bool {
         self.base_font.is_monospace()
     }
