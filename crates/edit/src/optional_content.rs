@@ -292,6 +292,7 @@ mod tests {
         assert!(Visibility::including_hidden().object_visible(&doc, &member));
     }
 
+    /// Checks that membership cache reuses results across marked scopes and form visits.
     #[test]
     fn membership_cache_reuses_results_across_marked_scopes_and_form_visits() {
         let mut doc = Document::new_empty();

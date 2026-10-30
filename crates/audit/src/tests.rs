@@ -530,6 +530,7 @@ fn reading_blocks_respect_stream_comments_and_split_operands() {
     }
 }
 
+/// Checks that hidden layers and deep scopes do not hide redaction findings.
 #[test]
 fn hidden_layers_and_deep_scopes_do_not_hide_redaction_findings() {
     use pdfcraft_cos::{Dict, ObjRef, Object};
@@ -571,6 +572,7 @@ fn hidden_layers_and_deep_scopes_do_not_hide_redaction_findings() {
     }
 }
 
+/// Checks that actual text replacement cannot conceal retained glyphs from audit.
 #[test]
 fn actual_text_replacement_cannot_conceal_retained_glyphs_from_audit() {
     let content = b"/Span << /ActualText (ACCESSIBLE) >> BDC BT /F1 24 Tf 100 700 Td (SECRET DATA 123) Tj ET EMC 0 g 100 688 220 32 re f";

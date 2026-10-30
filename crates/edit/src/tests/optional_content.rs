@@ -25,6 +25,7 @@ fn texts(doc: &Document) -> Vec<String> {
 
 const OFF: &str = "/OFF [6 0 R] /ON [7 0 R]";
 
+/// Checks that hidden optional content is absent from export and edit text.
 #[test]
 fn hidden_optional_content_is_absent_from_export_and_edit_text() {
     let doc = fixture(
@@ -36,6 +37,7 @@ fn hidden_optional_content_is_absent_from_export_and_edit_text() {
     assert_eq!(text::text_lines(&doc, 0).unwrap().iter().map(|l| l.text.as_str()).collect::<Vec<_>>(), ["PUBLIC", "SHOWN"]);
 }
 
+/// Checks that hidden forms and forms called inside hidden spans are not exported.
 #[test]
 fn hidden_forms_and_forms_called_inside_hidden_spans_are_not_exported() {
     for (content, form_oc, expected) in [
@@ -48,6 +50,7 @@ fn hidden_forms_and_forms_called_inside_hidden_spans_are_not_exported() {
     }
 }
 
+/// Checks that hidden show operators still advance the visible text.
 #[test]
 fn hidden_show_operators_still_advance_the_visible_text() {
     let hidden = fixture("BT /F1 12 Tf 40 700 Td (BEFORE) Tj /OC /Hidden BDC (SECRET) Tj EMC (AFTER) Tj ET", "", OFF);
@@ -59,6 +62,7 @@ fn hidden_show_operators_still_advance_the_visible_text() {
     assert_eq!(after.last().unwrap().rect[2], before.last().unwrap().rect[2]);
 }
 
+/// Checks that nested hidden spans do not reveal text when inner scopes end.
 #[test]
 fn nested_hidden_spans_do_not_reveal_text_when_inner_scopes_end() {
     let doc = fixture(
@@ -71,6 +75,7 @@ fn nested_hidden_spans_do_not_reveal_text_when_inner_scopes_end() {
     assert_eq!(texts(&open), ["PUBLIC"]);
 }
 
+/// Checks that default off and on off overrides match rendering.
 #[test]
 fn default_off_and_on_off_overrides_match_rendering() {
     let content = "/OC /Hidden BDC BT /F1 12 Tf 40 700 Td (HIDDEN_GROUP) Tj ET EMC /OC /Shown BDC BT /F1 12 Tf 40 500 Td (SHOWN_GROUP) Tj ET EMC";
@@ -79,6 +84,7 @@ fn default_off_and_on_off_overrides_match_rendering() {
     assert_eq!(texts(&fixture(content, "", "")), ["HIDDEN_GROUP", "SHOWN_GROUP"]);
 }
 
+/// Checks that membership policies and single group membership are respected.
 #[test]
 fn membership_policies_and_single_group_membership_are_respected() {
     use pdfcraft_cos::{ObjRef, Object};
@@ -101,6 +107,7 @@ fn membership_policies_and_single_group_membership_are_respected() {
     }
 }
 
+/// Checks that visibility expressions take precedence and malformed ones fall back.
 #[test]
 fn visibility_expressions_take_precedence_and_malformed_ones_fall_back() {
     use pdfcraft_cos::{ObjRef, Object};
@@ -131,6 +138,7 @@ fn visibility_expressions_take_precedence_and_malformed_ones_fall_back() {
     }
 }
 
+/// Checks that actual text cannot reintroduce hidden glyphs.
 #[test]
 fn actual_text_cannot_reintroduce_hidden_glyphs() {
     let doc = fixture("/Span <</ActualText (PUBLIC SECRET)>> BDC BT /F1 12 Tf 40 700 Td (PUBLIC) Tj /OC /Hidden BDC (SECRET) Tj EMC ET EMC", "", OFF);
@@ -141,6 +149,7 @@ fn actual_text_cannot_reintroduce_hidden_glyphs() {
     assert_eq!(texts(&hidden_form), ["PUBLIC"]);
 }
 
+/// Checks that marked visibility survives split streams.
 #[test]
 fn marked_visibility_survives_split_streams() {
     use pdfcraft_cos::{ObjRef, Object, Stream};
@@ -157,6 +166,7 @@ fn marked_visibility_survives_split_streams() {
     assert_eq!(text::text_lines(&doc, 0).unwrap()[0].text, "PUBLIC");
 }
 
+/// Checks that excessive marked depth cannot pop a hidden outer scope.
 #[test]
 fn excessive_marked_depth_cannot_pop_a_hidden_outer_scope() {
     let content = format!(
@@ -167,6 +177,7 @@ fn excessive_marked_depth_cannot_pop_a_hidden_outer_scope() {
     assert_eq!(texts(&fixture(&content, "", OFF)), ["PUBLIC"]);
 }
 
+/// Checks that form property names resolve in the forms own resources.
 #[test]
 fn form_property_names_resolve_in_the_forms_own_resources() {
     use pdfcraft_cos::ObjRef;
@@ -180,6 +191,7 @@ fn form_property_names_resolve_in_the_forms_own_resources() {
     assert_eq!(texts(&doc), ["FORM_PUBLIC"]);
 }
 
+/// Checks that excessive and cyclic visibility expressions have bounded fallback.
 #[test]
 fn excessive_and_cyclic_visibility_expressions_have_bounded_fallback() {
     use pdfcraft_cos::{ObjRef, Object};
@@ -212,6 +224,7 @@ fn excessive_and_cyclic_visibility_expressions_have_bounded_fallback() {
     assert!(texts(&doc).is_empty());
 }
 
+/// Checks that editing visible text preserves hidden operators and document bytes on read.
 #[test]
 fn editing_visible_text_preserves_hidden_operators_and_document_bytes_on_read() {
     let mut doc = fixture("BT /F1 12 Tf 40 700 Td (PUBLIC) Tj ET /OC /Hidden BDC BT /F1 12 Tf 40 686 Td (SECRET) Tj ET EMC", "", OFF);
@@ -228,6 +241,7 @@ fn editing_visible_text_preserves_hidden_operators_and_document_bytes_on_read() 
     );
 }
 
+/// Checks that configuration work budget omits optional text but keeps ordinary text.
 #[test]
 fn configuration_work_budget_omits_optional_text_but_keeps_ordinary_text() {
     use pdfcraft_cos::{ObjRef, Object};
@@ -244,6 +258,7 @@ fn configuration_work_budget_omits_optional_text_but_keeps_ordinary_text() {
     assert_eq!(texts(&doc), ["PUBLIC"]);
 }
 
+/// Checks that indirect properties membership arrays and nested form visibility.
 #[test]
 fn indirect_properties_membership_arrays_and_nested_form_visibility() {
     use pdfcraft_cos::{ObjRef, Object, Stream};
@@ -348,6 +363,7 @@ fn named_actual_text_around_forms_is_invalidated_but_images_keep_it() {
     assert_eq!(text::text_lines(&doc, 0).unwrap()[0].text, "PUBLIC NESTED_SECRET");
 }
 
+/// Checks that visible text past 256 marked levels is read.
 #[test]
 fn visible_text_past_256_marked_levels_is_read() {
     for depth in [255, 256, 257, 300] {
@@ -358,6 +374,7 @@ fn visible_text_past_256_marked_levels_is_read() {
     }
 }
 
+/// Checks that deep hidden scope ends at its own emc.
 #[test]
 fn deep_hidden_scope_ends_at_its_own_emc() {
     let content = format!(
@@ -368,6 +385,7 @@ fn deep_hidden_scope_ends_at_its_own_emc() {
     assert_eq!(texts(&fixture(&content, "", OFF)), ["PUBLIC"]);
 }
 
+/// Checks that unresolvable oc properties stay visible.
 #[test]
 fn unresolvable_oc_properties_stay_visible() {
     for prefix in ["/OC /Nope BDC", "/OC BDC", "/Span /Hidden BDC"] {
