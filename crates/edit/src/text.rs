@@ -843,6 +843,9 @@ fn interpret(
         let visible = carry.visibility.visible()
             && (!op.is("Do")
                 || op.name(0).is_none_or(|name| carry.visibility.xobject_visible(doc, xobjects.as_ref().and_then(|o| o.as_dict()), name)));
+        if carry.visibility.check_budget().is_err() {
+            break;
+        }
         if actual.iter().any(Option::is_some)
             && ((!visible && matches!(op.op.as_slice(), b"Tj" | b"TJ" | b"'" | b"\"" | b"Do"))
                 || (op.is("Do") && op.name(0).is_some_and(|name| is_form_xobject(doc, resources, name))))
@@ -1140,6 +1143,7 @@ fn read_text_lines(doc: &Document, page: usize, include_hidden: bool) -> Result<
     let ops = pieces.parse().ops;
     let properties = res.get(b"Properties").and_then(|o| doc.dict(o)).unwrap_or_default();
     let shown = interpret(doc, &ops, &res, &mut cache, &mut carry, None, (!include_hidden).then_some(&properties));
+    carry.visibility.check_budget()?;
     let mut last: Option<(usize, Pen)> = None; // the stream piece and where its last run ended
     for mut s in shown {
         // A single RTL glyph's ActualText (e.g. lam-alef) is an inline ligature, not a
@@ -1473,6 +1477,7 @@ fn reading_lines(doc: &Document, page: usize) -> Result<(Vec<TextLine>, bool), E
     let ops = pieces.parse().ops;
     let stream_of = |i: usize| ops.get(i).map_or(0, |op| pieces.pieces_of(op).0);
     walk(&mut w, &ops, &res, &mut carry, &stream_of);
+    carry.visibility.check_budget()?;
     let mut lines = w.lines;
     // A visual-order Indic font draws pre-base vowel signs before their consonant.
     for l in lines.iter_mut().filter(|l| l.visual_order && !l.actual_text) {

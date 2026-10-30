@@ -386,3 +386,27 @@ fn unresolvable_oc_properties_stay_visible() {
         assert_eq!(texts(&doc), ["PUBLIC"]);
     }
 }
+
+/// Named direct OCMDs cannot amplify repeated scopes into unbounded group scans.
+#[test]
+fn direct_membership_work_limit_is_an_explicit_extraction_error() {
+    use pdfcraft_cos::{ObjRef, Object};
+    let content = format!("{} BT /F1 12 Tf 40 700 Td (RETAINED) Tj ET", "/OC /Member BDC EMC ".repeat(20));
+    let mut doc = fixture(&content, "", "");
+    let mut member = Dict::new();
+    member.set(b"Type".to_vec(), Object::name("OCMD"));
+    member.set(b"P".to_vec(), Object::name("AllOn"));
+    let groups = doc.add(Object::Array(vec![Object::Ref(ObjRef::new(7, 0)); 65_536]));
+    member.set(b"OCGs".to_vec(), Object::Ref(groups));
+    doc.update_dict(ObjRef::new(3, 0), |page| {
+        let mut resources = page.get(b"Resources").unwrap().as_dict().unwrap().clone();
+        let mut properties = Dict::new();
+        properties.set(b"Member".to_vec(), Object::Dict(member));
+        resources.set(b"Properties".to_vec(), Object::Dict(properties));
+        page.set(b"Resources".to_vec(), Object::Dict(resources));
+    })
+    .unwrap();
+    assert!(text::text_lines(&doc, 0).unwrap_err().to_string().contains("visibility work limit"));
+    assert!(text::reading_blocks(&doc, 0).unwrap_err().to_string().contains("visibility work limit"));
+    assert!(text::text_lines_including_hidden(&doc, 0).unwrap().iter().any(|l| l.text.contains("RETAINED")));
+}

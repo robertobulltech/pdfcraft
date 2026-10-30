@@ -3,10 +3,12 @@
 use pdfcraft_content::Op;
 use pdfcraft_cos::{Dict, Document, ObjRef, Object};
 use std::{
-    cell::RefCell,
+    cell::{Cell, RefCell},
     collections::{HashMap, HashSet},
     rc::Rc,
 };
+
+const MAX_VISIBILITY_WORK: usize = 1_048_576;
 
 const MAX_GROUPS: usize = 65_536;
 // Only paragraph/ActualText metadata is capped; visibility uses constant space at any depth.
@@ -21,6 +23,8 @@ pub(crate) struct Visibility {
     // publish content whose visibility could not be determined. Ordinary content is unaffected.
     inactive: Rc<Option<HashSet<ObjRef>>>,
     memo: Rc<RefCell<HashMap<ObjRef, bool>>>,
+    work: Rc<Cell<usize>>,
+    exhausted: Rc<Cell<bool>>,
     depth: usize,
     first_hidden: Option<usize>,
     include_hidden: bool,
@@ -30,7 +34,15 @@ impl Visibility {
     /// Read the default configuration once; form scopes share its immutable group state.
     pub(crate) fn new(doc: &Document) -> Self {
         let inactive = Self::inactive(doc);
-        Self { inactive: Rc::new(inactive), memo: Rc::new(RefCell::new(HashMap::new())), depth: 0, first_hidden: None, include_hidden: false }
+        Self {
+            inactive: Rc::new(inactive),
+            memo: Rc::new(RefCell::new(HashMap::new())),
+            work: Rc::new(Cell::new(MAX_VISIBILITY_WORK)),
+            exhausted: Rc::new(Cell::new(false)),
+            depth: 0,
+            first_hidden: None,
+            include_hidden: false,
+        }
     }
 
     /// Audit retained glyphs regardless of the document's default layer configuration.
@@ -38,6 +50,8 @@ impl Visibility {
         Self {
             inactive: Rc::new(Some(HashSet::new())),
             memo: Rc::new(RefCell::new(HashMap::new())),
+            work: Rc::new(Cell::new(MAX_VISIBILITY_WORK)),
+            exhausted: Rc::new(Cell::new(false)),
             depth: 0,
             first_hidden: None,
             include_hidden: true,
@@ -79,7 +93,15 @@ impl Visibility {
     /// Forms inherit the caller's visibility by being entered only at visible Do operators.
     /// Their own marked-content stack cannot pop the caller's scopes.
     pub(crate) fn fresh(&self) -> Self {
-        Self { inactive: self.inactive.clone(), memo: self.memo.clone(), depth: 0, first_hidden: None, include_hidden: self.include_hidden }
+        Self {
+            inactive: self.inactive.clone(),
+            memo: self.memo.clone(),
+            work: self.work.clone(),
+            exhausted: self.exhausted.clone(),
+            depth: 0,
+            first_hidden: None,
+            include_hidden: self.include_hidden,
+        }
     }
 
     /// Report cumulative visibility without suppressing deeply nested ordinary content.
@@ -138,6 +160,23 @@ impl Visibility {
         })
     }
 
+    /// Charge shared work across page scopes and forms, including uncached direct dictionaries.
+    fn charge(&self, amount: usize) -> bool {
+        if let Some(left) = self.work.get().checked_sub(amount) {
+            self.work.set(left);
+            true
+        } else {
+            self.work.set(0);
+            self.exhausted.set(true);
+            false
+        }
+    }
+
+    /// Refuse partial extraction when visibility could not be determined within the allowance.
+    pub(crate) fn check_budget(&self) -> Result<(), crate::EditError> {
+        if self.exhausted.get() { Err(crate::EditError::Invalid("optional-content visibility work limit exceeded".into())) } else { Ok(()) }
+    }
+
     /// Evaluate an OCG or OCMD; a valid VE overrides membership policy.
     pub(crate) fn object_visible(&self, doc: &Document, value: &Object) -> bool {
         if self.include_hidden {
@@ -162,6 +201,9 @@ impl Visibility {
 
     /// Evaluate uncached membership with per-expression and per-group work budgets.
     fn evaluate(&self, doc: &Document, value: &Object) -> bool {
+        if !self.charge(1) {
+            return false;
+        }
         let Some(inactive) = self.inactive.as_ref() else { return false };
         let resolved = doc.resolve(value);
         let Some(dict) = resolved.as_dict() else { return true };
@@ -177,7 +219,7 @@ impl Visibility {
         let Some(groups) = dict.get(b"OCGs") else { return true };
         let resolved = doc.resolve(groups);
         let groups = resolved.as_array().map(Vec::as_slice).unwrap_or_else(|| std::slice::from_ref(groups));
-        if groups.len() > MAX_GROUPS {
+        if groups.len() > MAX_GROUPS || !self.charge(groups.len()) {
             return false;
         }
         let mut states = groups.iter().filter_map(Object::as_ref).map(|r| !inactive.contains(&r)).peekable();
@@ -194,7 +236,7 @@ impl Visibility {
 
     /// Evaluate boolean VE nodes within depth/work limits; invalid input requests policy fallback.
     fn expression(&self, doc: &Document, value: &Object, depth: usize, work: &mut usize) -> Option<bool> {
-        if depth > MAX_EXPRESSION_DEPTH || *work == 0 {
+        if depth > MAX_EXPRESSION_DEPTH || *work == 0 || !self.charge(1) {
             return None;
         }
         *work -= 1;
@@ -226,6 +268,29 @@ impl Visibility {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    /// Direct membership dictionaries and form scopes consume the same bounded allowance.
+    #[test]
+    fn repeated_direct_membership_exhausts_shared_work() {
+        let mut doc = Document::new_empty();
+        let mut group = Dict::new();
+        group.set(b"Type".to_vec(), Object::name("OCG"));
+        let group = doc.add(Object::Dict(group));
+        let mut member = Dict::new();
+        member.set(b"Type".to_vec(), Object::name("OCMD"));
+        member.set(b"P".to_vec(), Object::name("AllOn"));
+        member.set(b"OCGs".to_vec(), Object::Array(vec![Object::Ref(group); MAX_GROUPS]));
+        let member = Object::Dict(member);
+        let visibility = Visibility::new(&doc);
+        assert!(visibility.object_visible(&doc, &member));
+        for _ in 0..MAX_VISIBILITY_WORK / MAX_GROUPS {
+            visibility.fresh().object_visible(&doc, &member);
+        }
+        assert!(visibility.check_budget().is_err());
+        assert!(!visibility.object_visible(&doc, &member));
+        assert!(Visibility::new(&doc).check_budget().is_ok());
+        assert!(Visibility::including_hidden().object_visible(&doc, &member));
+    }
 
     #[test]
     fn membership_cache_reuses_results_across_marked_scopes_and_form_visits() {

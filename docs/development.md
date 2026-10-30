@@ -173,7 +173,10 @@ Paragraph/ActualText metadata remains capped at 256 levels, with matching excess
 Configurations exceeding 65,536 entries omit optional text rather than export text whose
 visibility could not be determined. Referenced OCG/OCMD results are cached across operators
 and form visits, with at most 65,536 cached objects per read; direct dictionaries retain the
-per-evaluation limits. The cache is rebuilt on every read. XObject resources resolve once per
+per-evaluation limits. Uncached membership and expression work also share a cumulative
+1,048,576-unit allowance across a page read and its forms. Exhaustion returns an explicit
+extraction error instead of exporting partial text. Hidden-inclusive auditing bypasses visibility
+evaluation. The cache and work allowance are rebuilt on every read. XObject resources resolve once per
 interpreter invocation. Existing form depth/visit limits remain in place.
 
 Redaction auditing uses `text_lines_including_hidden`, which reads retained page glyphs
