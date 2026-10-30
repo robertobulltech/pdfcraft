@@ -2,8 +2,11 @@ use super::{LayerOp, PdfCraftApp, Pos2, Rect};
 
 /// A validation badge drawn over a signature widget: the widget rectangle (user space), the verdict it shows, and its hover text.
 pub(crate) struct SignatureBadge {
+    /// Widget rectangle in PDF user-space coordinates.
     pub rect: [f64; 4],
+    /// Validation verdict represented by the badge.
     pub status: pdfcraft_engine::SignatureStatus,
+    /// Short description shown when the badge is hovered.
     pub summary: &'static str,
 }
 
@@ -32,7 +35,12 @@ pub(super) const SUPPRESS_SECS: f64 = 0.25;
 /// Short rolling extension while egui still has an unprocessed wheel tail.
 pub(super) const SUPPRESS_TAIL_SECS: f64 = 0.05;
 
-// Keep the viewer's scroll identity tied to the document instead of its parent UI.
+/// Show the page viewport with a scroll identity tied to the document rather than its parent UI.
+///
+/// Floating scrollbar handles and backgrounds retain their active opacity while the pointer
+/// drags another widget, so short drawing strokes do not make the viewer bars disappear. The
+/// style override is scoped to this viewer; other scroll areas keep their inherited style.
+/// Returns the scroll area's output, including the value returned by `draw`.
 pub(super) fn page_scroll<R>(
     ui: &mut egui::Ui,
     scroll: egui::ScrollArea,
